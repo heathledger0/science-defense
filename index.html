@@ -12,139 +12,54 @@
             --warning: #f59e0b; --warning-glow: rgba(245, 158, 11, 0.5);
             --dark-bg: #0b1120; --panel-bg: rgba(15, 23, 42, 0.85);
         }
-        /* 모바일 화면 잘림 방지를 위해 100dvh 사용 및 높이 100% 고정 */
         html, body { 
             width: 100%; height: 100%; margin: 0; padding: 0; 
             background: var(--dark-bg); color: white; font-family: 'Pretendard', 'Malgun Gothic', sans-serif; 
             overflow: hidden; touch-action: none; user-select: none; -webkit-user-select: none;
         }
-        
-        #game-container { 
-            position: relative; width: 100%; 
-            height: 100vh; height: 100dvh; /* 핵심: 모바일 주소창 제외한 실제 화면 높이 */
-            display: flex; flex-direction: column; 
-        }
-        
+        #game-container { width: 100%; height: 100vh; height: 100dvh; display: flex; flex-direction: column; }
         #canvas-wrapper { flex-grow: 1; position: relative; width: 100%; height: 100%; overflow: hidden; background: radial-gradient(circle at center, #1e293b 0%, #0b1120 100%); }
         canvas { display: block; width: 100%; height: 100%; box-shadow: inset 0 0 40px rgba(0,0,0,0.8); }
-        
-        /* Glassmorphism UI Panel */
         #ui-panel { 
-            flex-shrink: 0; /* 화면이 작아져도 이 패널은 찌그러지지 않음 */
-            height: auto; min-height: 220px; padding: 10px; 
-            background: var(--panel-bg); 
-            backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+            flex-shrink: 0; height: auto; min-height: 220px; padding: 10px; 
+            background: var(--panel-bg); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
             border-top: 1px solid rgba(255,255,255,0.1);
             display: flex; flex-direction: column; align-items: center; justify-content: space-between; 
-            box-sizing: border-box; z-index: 10; box-shadow: 0 -10px 20px rgba(0,0,0,0.5); width: 100%;
+            box-sizing: border-box; z-index: 10; width: 100%;
         }
-        
-        #quiz-box { width: 100%; max-width: 600px; background: rgba(0,0,0,0.4); border-radius: 8px; padding: 6px 10px; box-sizing: border-box; border: 1px solid rgba(255,255,255,0.05); margin-bottom: 5px; }
-        #quiz-text { font-size: 1rem; font-weight: 700; text-align: center; color: #f8fafc; line-height: 1.3; word-break: keep-all; min-height: 2.6em; display: flex; align-items: center; justify-content: center; }
-        
+        #quiz-box { width: 100%; max-width: 600px; background: rgba(0,0,0,0.4); border-radius: 8px; padding: 6px 10px; box-sizing: border-box; border: 1px solid rgba(255,255,255,0.05); margin-bottom: 5px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        #quiz-text { font-size: 1rem; font-weight: 700; text-align: center; color: #f8fafc; line-height: 1.3; word-break: keep-all; min-height: 2.6em; display: flex; align-items: center; justify-content: center; width: 100%; }
+        #quiz-img { max-width: 100%; height: 100px; object-fit: contain; margin-top: 5px; border-radius: 5px; display: none; }
         .answer-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; width: 100%; max-width: 600px; margin-bottom: 5px;}
         button.ans { 
             padding: 10px 6px; font-size: 0.9rem; font-weight: 600; 
             border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; 
             background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%); 
             color: #cbd5e1; cursor: pointer; transition: all 0.15s; 
-            touch-action: manipulation;
         }
         button.ans:active { transform: scale(0.96); background: rgba(59, 130, 246, 0.3); border-color: #60a5fa; color: white; }
-
-        .tower-selector { display: flex; gap: 6px; width: 100%; max-width: 600px; overflow-x: auto; padding: 5px 2px; scrollbar-width: none; align-items: stretch; }
-        .tower-selector::-webkit-scrollbar { display: none; }
-        
-        .tower-btn { 
-            flex: 1; min-width: 60px; padding: 6px 2px; font-size: 0.7rem; font-weight: bold; 
-            border: 2px solid transparent; border-radius: 10px; 
-            background: rgba(15, 23, 42, 0.8); color: #94a3b8; 
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            cursor: pointer; transition: 0.2s; touch-action: manipulation;
-        }
-        .tower-btn .t-icon { font-size: 1.5rem; margin-bottom: 2px; filter: drop-shadow(0 2px 2px rgba(0,0,0,0.5)); }
-        .tower-btn.active { 
-            background: rgba(59, 130, 246, 0.25); border-color: var(--primary); color: white; 
-            box-shadow: 0 0 15px var(--primary-glow); transform: translateY(-3px);
-        }
-
-        #stats { 
-            position: absolute; top: 10px; left: 10px; font-size: 0.9rem; font-weight: bold; 
-            color: white; pointer-events: none; z-index: 10; line-height: 1.5; 
-            background: rgba(0,0,0,0.6); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
-            padding: 8px 12px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.1);
-        }
-        .stat-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 2px; }
-        .stat-val { font-family: monospace; font-size: 1.1em; }
-        .gold-text { color: #fbbf24; text-shadow: 0 0 5px rgba(251, 191, 36, 0.5); }
-        .hp-text { color: #ef4444; text-shadow: 0 0 5px rgba(239, 68, 68, 0.5); }
-
-        /* 난이도 선택 & 모달 오버레이 */
-        #overlay {
-            position: absolute; top:0; left:0; width:100%; height:100%;
-            background: rgba(11, 17, 32, 0.95); z-index: 100; display: flex;
-            flex-direction: column; align-items: center; justify-content: center;
-            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); text-align: center;
-        }
-        .title-text { font-size: 2.5rem; font-weight: 900; margin-bottom: 10px; color: #fff; text-shadow: 0 0 20px var(--primary); }
-        .desc-text { font-size: 1rem; margin-bottom: 30px; color: #cbd5e1; line-height: 1.5; word-break: keep-all; padding: 0 20px;}
-        
-        .mode-btn { 
-            width: 80%; max-width: 300px; padding: 15px; margin-bottom: 15px;
-            font-size: 1.1rem; font-weight: bold; border-radius: 15px; cursor: pointer;
-            transition: 0.2s; display: flex; flex-direction: column; align-items: center; gap: 5px;
-        }
-        .mode-normal { background: rgba(16, 185, 129, 0.1); border: 2px solid #10b981; color: #34d399; box-shadow: 0 0 15px rgba(16, 185, 129, 0.3); }
-        .mode-hard { background: rgba(239, 68, 68, 0.1); border: 2px solid #ef4444; color: #f87171; box-shadow: 0 0 15px rgba(239, 68, 68, 0.3); }
-        .mode-btn:active { transform: scale(0.95); }
-        .mode-btn span { font-size: 0.8rem; font-weight: normal; color: #94a3b8; }
-
-        @media (max-width: 400px) {
-            #quiz-text { font-size: 0.9rem; min-height: 2.4em; }
-            button.ans { padding: 8px 4px; font-size: 0.8rem; }
-            .tower-btn .t-icon { font-size: 1.3rem; }
-            .title-text { font-size: 2rem; }
-        }
+        .tower-selector { display: flex; gap: 6px; width: 100%; max-width: 600px; overflow-x: auto; padding: 5px 2px; scrollbar-width: none; }
+        .tower-btn { flex: 1; min-width: 60px; padding: 6px 2px; font-size: 0.7rem; font-weight: bold; border-radius: 10px; background: rgba(15, 23, 42, 0.8); color: #94a3b8; display: flex; flex-direction: column; align-items: center; }
+        .tower-btn.active { background: rgba(59, 130, 246, 0.25); border: 2px solid var(--primary); color: white; }
+        #stats { position: absolute; top: 10px; left: 10px; z-index: 10; background: rgba(0,0,0,0.6); padding: 8px 12px; border-radius: 10px; color: white; font-size: 0.9rem; pointer-events: none; }
+        #overlay { position: absolute; top:0; left:0; width:100%; height:100%; background: rgba(11, 17, 32, 0.95); z-index: 100; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
     </style>
 </head>
 <body>
 <div id="game-container">
-    <div id="canvas-wrapper">
-        <canvas id="gameCanvas"></canvas>
-    </div>
-    
+    <div id="canvas-wrapper"><canvas id="gameCanvas"></canvas></div>
     <div id="stats">
-        <div class="stat-row"><span>💰 자금</span> <span id="gold-val" class="stat-val gold-text">0</span></div>
-        <div class="stat-row"><span>🏢 기지 LV</span> <span id="base-lv" class="stat-val">1</span></div>
-        <div class="stat-row"><span>❤️ 내구도</span> <span id="life-val" class="stat-val hp-text">0</span></div>
-        <div class="stat-row" style="margin-top:4px; font-size:0.8em; color:#60a5fa; justify-content:center;" id="wave-val">시스템 대기중</div>
+        <div>💰 자금: <span id="gold-val">0</span></div>
+        <div>❤️ 내구도: <span id="life-val">0</span></div>
     </div>
-    
-    <!-- 시작 화면 및 게임오버 화면 공용 오버레이 -->
     <div id="overlay">
-        <div id="overlay-title" class="title-text">연구소 디펜스 PRO</div>
-        <div id="overlay-desc" class="desc-text">다가오는 몬스터들을 막기 위해<br>화석과 빛 에너지를 활용하여 방어탑을 건설하세요!</div>
-        
-        <div id="start-buttons">
-            <button class="mode-btn mode-normal" onclick="startGame('normal')">
-                일반 모드
-                <span>초보자용 (자금 150G / 체력 100)</span>
-            </button>
-            <button class="mode-btn mode-hard" onclick="startGame('hard')">
-                도전 모드
-                <span>숙련자용 (자금 100G / 체력 50 / 적 강화)</span>
-            </button>
-        </div>
-        <div id="restart-buttons" style="display: none;">
-            <button class="mode-btn mode-normal" onclick="location.reload()" style="color:#fff; border-color:var(--primary); background:var(--primary);">
-                메인 화면으로
-            </button>
-        </div>
+        <div id="overlay-title" style="font-size: 2.5rem; font-weight: 900; margin-bottom: 20px;">연구소 디펜스 PRO</div>
+        <button onclick="startGame('normal')" style="padding: 15px 40px; font-size: 1.2rem; cursor: pointer;">게임 시작</button>
     </div>
-
     <div id="ui-panel">
         <div id="quiz-box">
-            <div id="quiz-text">문제를 맞추고 자원을 얻어 방어탑을 건설하세요!</div>
+            <div id="quiz-text">문제를 맞추고 자원을 얻으세요!</div>
+            <img id="quiz-img" src="" alt="퀴즈 이미지">
         </div>
         <div class="answer-buttons">
             <button class="ans" onclick="checkAnswer(0)" id="btn0">-</button>
@@ -152,567 +67,49 @@
             <button class="ans" onclick="checkAnswer(2)" id="btn2">-</button>
             <button class="ans" onclick="checkAnswer(3)" id="btn3">-</button>
         </div>
-        <div class="tower-selector">
-            <div class="tower-btn active" id="tw1" onclick="selectTower(1)">
-                <div class="t-icon">⚡</div><div>광자포</div><div style="color:#fbbf24; margin-top:2px;">40G</div>
-            </div>
-            <div class="tower-btn" id="tw2" onclick="selectTower(2)">
-                <div class="t-icon">💎</div><div>프리즘</div><div style="color:#fbbf24; margin-top:2px;">100G</div>
-            </div>
-            <div class="tower-btn" id="tw3" onclick="selectTower(3)">
-                <div class="t-icon">🔶</div><div>호박석</div><div style="color:#fbbf24; margin-top:2px;">300G</div>
-            </div>
-            <div class="tower-btn" id="tw4" onclick="selectTower(4)">
-                <div class="t-icon">🌀</div><div>나선폭격</div><div style="color:#fbbf24; margin-top:2px;">500G</div>
-            </div>
-            <div class="tower-btn" id="tw5" onclick="selectTower(5)">
-                <div class="t-icon">🚀</div><div>티탄캐논</div><div style="color:#fbbf24; margin-top:2px;">1000G</div>
-            </div>
-        </div>
     </div>
 </div>
-
 <script>
-    // --- 1. 기본 설정 및 데이터 ---
     const canvas = document.getElementById('gameCanvas');
     const ctx = canvas.getContext('2d');
-    const ui = {
-        gold: document.getElementById('gold-val'), life: document.getElementById('life-val'),
-        wave: document.getElementById('wave-val'), baseLv: document.getElementById('base-lv'),
-        quizText: document.getElementById('quiz-text'), 
-        overlay: document.getElementById('overlay'), overlayTitle: document.getElementById('overlay-title'),
-        overlayDesc: document.getElementById('overlay-desc'),
-        startBtns: document.getElementById('start-buttons'), restartBtns: document.getElementById('restart-buttons')
-    };
-
-    let width, height;
-
     const quizBank = [
         { id: 1, q: "자갈, 모래, 진흙 등이 쌓여 층을 이루고 있는 것은?", a: ["퇴적물", "침식", "지층", "화석"], correct: 2 },
-        { id: 2, q: "지층에 대한 설명으로 옳지 않은 것은?", a: ["퇴적물이 쌓여 만들어짐", "빠른시간에 만들어짐", "단단함", "줄무늬가 보임"], correct: 1 },
-        { id: 3, q: "실제 지층에서 가장 먼저 만들어진 층은?", a: ["맨 위층", "중간층", "맨 아래층", "알수 없음"], correct: 2 },
-        { id: 4, q: "퇴적물이 쌓인 뒤 굳어져 만들어진 암석은?", a: ["물", "화석", "모래", "퇴적암"], correct: 3 },
-        { id: 5, q: "퇴적암은 암석을 이루는 알갱이의 OO에 따라 구분한다.", a: ["크기", "색깔", "순서", "맛"], correct: 0 },
-        { id: 6, q: "발견된 곳이 얕고 따뜻한 바다임을 알려주는 화석은?", a: ["고사리화석", "산호화석", "상어이빨화석", "삼엽충화석"], correct: 1 },
-        { id: 7, q: "화석이 만들어지기 위해 유리한 조건이 아닌 것은?", a: ["단단한 부분이 있음", "퇴적물이 빠르게 쌓임", "호수나 바다에 가라앉음", "햇빛을 오래 받음"], correct: 3 },
-        { id: 8, q: "조개화석을 통해 알 수 있는 것은?", a: ["옛날에 바다였음", "발견자의 이름", "옛날에 육지에 살았음", "옛날 조개도 맛있었음"], correct: 0 },
-        { id: 9, q: "지층 속에 옛날 생물의 몸체나 흔적이 남은것을 무엇이라 하나요?", a: ["지층", "사암", "화석", "공룡"], correct: 2 },
-        { id: 11, q: "모래가 오랜시간 굳어져 만들어진 암석은?", a: ["이암", "사암", "역암", "화석"], correct: 1 },
-        { id: 12, q: "다음 중 알갱이가 가장 작은 것은?", a: ["이암", "사암", "역암", "화석"], correct: 0 },
-        { id: 13, q: "공기중 나아가는 빛의 성질로 옳은 것은?", a: ["빛은 휘어진다", "빛의 방향은 알수없다", "빛은 직진한다", "빛이 없어도 보인다"], correct: 2 },
-        { id: 14, q: "빛이 깜빡이는 것으로 신호를 보내는 것은?", a: ["점자", "글자", "연산기호", "모스부호"], correct: 3 },
-        { id: 15, q: "빛을 이용한 사례가 아닌 것은?", a: ["형광등", "등대", "수도꼭지", "손전등"], correct: 2 },
-        { id: 16, q: "빛이 거울에서 꺾이는 것을 무엇이라고 하나요?", a: ["빛의 직진", "빛의 확산", "빛의 소멸", "빛의 반사"], correct: 3 },
-        { id: 17, q: "역암에 대한 설명으로 옳지 않은 것은?", a: ["진흙이 굳어 만들어졌다", "알갱이가 크다", "모래, 자갈이 보인다", "표면이 거칠다"], correct: 0 },
-        { id: 18, q: "화석이 되기 가장 유리한 생물은?", a: ["지렁이", "애벌레", "달팽이", "오징어"], correct: 2 },
-        { id: 19, q: "화석에 대한 설명으로 옳지 않은 것은?", a: ["몸체가 지층에 남아있음", "생물의 흔적도 포함", "눈에 보이지 않게 작기도 함", "생물 전체가 남아야 인정"], correct: 3 },
-        { id: 20, q: "화석을 통해 알 수 있는 것은?", a: ["옛날 생물의 생김새", "과거 지구의 크기", "화석 발견자의 나이", "오늘날 생물의 나이"], correct: 0 },
-        { id: 21, q: "과학실 안전 수칙으로 옳지 않은것은?", a: ["뛰지 않음", "실험은 나혼자함", "실험 도구 사용법 숙지", "함부로 맛보지 않음"], correct: 1 },
-        { id: 22, q: "공룡 발자국 화석을 통해 추측할 수 없는 것은?", a: ["공룡의 크기", "공룡의 보폭", "공룡의 나이", "공룡이 걸어간 방향"], correct: 2 }
+        { id: 24, q: "그림과 같은 지층에서 가장 나중에 쌓인 층의 기호를 고르세요.", img: "images/q24.png", a: ["ㄱ", "ㄴ", "ㄷ", "ㄹ"], correct: 0 },
+        { id: 25, q: "다음 중 지층의 특징을 잘못 말한 것은 무엇인가요?", a: ["지층은 줄무늬가 있다.", "지층의 모양은 수평, 끊어짐 등 다양하다.", "지층은 층의 두께가 모두 똑같다.", "다양한 퇴적물이 쌓여 층을 이룬다."], correct: 2 }
+        // ... 생략된 기존 문제들
     ];
 
-    const towerTypes = {
-        1: { id: 1, name: "광자포", cost: 40, range: 110, pwr: 8, fireRate: 0.6, type: 'basic', color: '#fde047' },
-        2: { id: 2, name: "프리즘", cost: 100, range: 135, pwr: 4, fireRate: 0.05, type: 'laser', color: '#38bdf8' },
-        3: { id: 3, name: "호박석", cost: 300, range: 160, pwr: 20, fireRate: 1.5, type: 'slow', color: '#a855f7' },
-        4: { id: 4, name: "나선폭격", cost: 500, range: 190, pwr: 45, fireRate: 2.0, type: 'splash', color: '#f472b6' },
-        5: { id: 5, name: "티탄캐논", cost: 1000, range: 250, pwr: 250, fireRate: 3.0, type: 'heavy', color: '#ef4444' }
+    let state = { gold: 150, quizIdx: 0, status: 'ready', currentQuiz: null };
+    const ui = { 
+        text: document.getElementById('quiz-text'), 
+        img: document.getElementById('quiz-img'),
+        gold: document.getElementById('gold-val') 
     };
-
-    const pathRatio = [{ x: 0, y: 0.15 }, { x: 0.8, y: 0.15 }, { x: 0.8, y: 0.4 }, { x: 0.2, y: 0.4 }, { x: 0.2, y: 0.65 }, { x: 0.8, y: 0.65 }, { x: 0.8, y: 0.85 }, { x: 0.5, y: 0.85 }];
-
-    // --- 2. 게임 상태 엔진 ---
-    let state = {
-        difficulty: 'normal', // 'normal' or 'hard'
-        gold: 150, life: 100, status: 'ready', time: 0,
-        baseLv: 1, baseCool: 0, selectedTower: 1, screenShake: 0,
-        path: [], quizIdx: 0, wrongQuizzes: [], quizMode: 'normal', currentQuiz: null,
-        mouseX: -100, mouseY: -100, isTouching: false
-    };
-
-    let enemies = [], towers = [], bullets = [], particles = [], texts = [];
-    let lastTime = 0, spawnTimer = 0, bgOffset = 0;
-
-    // --- 3. 게임 시작 로직 ---
-    window.startGame = function(mode) {
-        state.difficulty = mode;
-        ui.overlay.style.display = 'none';
-        ui.startBtns.style.display = 'none';
-        
-        state.gold = mode === 'hard' ? 100 : 150;
-        state.life = mode === 'hard' ? 50 : 100;
-        state.status = 'playing';
-        state.time = 0; state.baseLv = 1; state.wrongQuizzes = []; state.quizIdx = 0;
-        
-        enemies = []; towers = []; bullets = []; particles = []; texts = [];
-        spawnTimer = 2.0; 
-        
-        resizeCanvas(); nextQuiz();
-        lastTime = performance.now();
-        requestAnimationFrame(gameLoop);
-    };
-
-    function showEndScreen(isVictory) {
-        state.status = isVictory ? 'victory' : 'gameover';
-        ui.overlay.style.display = 'flex';
-        ui.restartBtns.style.display = 'block';
-        
-        if (isVictory) {
-            ui.overlayTitle.innerText = "VICTORY"; 
-            ui.overlayTitle.style.color = "#fbbf24"; ui.overlayTitle.style.textShadow = "0 0 20px #fbbf24";
-            ui.overlayDesc.innerText = "훌륭합니다! 연구소를 안전하게 지켜냈습니다!";
-        } else {
-            ui.overlayTitle.innerText = "MISSION FAILED"; 
-            ui.overlayTitle.style.color = "#ef4444"; ui.overlayTitle.style.textShadow = "0 0 20px #ef4444";
-            ui.overlayDesc.innerText = "방어선이 무너졌습니다... 다시 도전하세요!";
-        }
-    }
-
-    // --- 4. 클래스 정의 ---
-    class Enemy {
-        constructor(type, hpMultiplier) {
-            this.type = type; this.pathIdx = 0;
-            this.x = state.path[0].x; this.y = state.path[0].y;
-            this.wobble = Math.random() * Math.PI * 2;
-            this.hitTimer = 0; this.slowTimer = 0;
-
-            const bStats = {
-                1: { name: "먼지", color: "#94a3b8", hp: 15, spd: 45, rad: 12, reward: 10, dmg: 5, shape: 'circle' },
-                2: { name: "진흙", color: "#78350f", hp: 35, spd: 35, rad: 15, reward: 15, dmg: 10, shape: 'blob' },
-                3: { name: "박쥐", color: "#475569", hp: 60, spd: 65, rad: 14, reward: 20, dmg: 15, shape: 'bat' },
-                4: { name: "유령", color: "#8b5cf6", hp: 150, spd: 50, rad: 16, reward: 35, dmg: 25, shape: 'ghost' },
-                5: { name: "골렘", color: "#334155", hp: 400, spd: 25, rad: 22, reward: 60, dmg: 40, shape: 'square' },
-                boss: { name: "운석 보스", color: "#ef4444", hp: 8000, spd: 15, rad: 45, reward: 0, dmg: 100, shape: 'boss' }
-            };
-            
-            let stat = bStats[type];
-            this.name = stat.name; this.color = stat.color; this.shape = stat.shape;
-            
-            // 도전모드일 경우 적 체력 1.5배, 이동속도 1.2배
-            let finalHpMult = hpMultiplier * (state.difficulty === 'hard' ? 1.5 : 1.0);
-            this.maxHp = stat.hp * finalHpMult; this.hp = this.maxHp;
-            this.baseSpd = stat.spd * (state.difficulty === 'hard' ? 1.2 : 1.0);
-            
-            this.rad = stat.rad; this.reward = stat.reward; this.dmg = stat.dmg;
-            this.isBoss = (type === 'boss');
-        }
-
-        takeDamage(amount, type) {
-            this.hp -= amount; this.hitTimer = 0.1; 
-            if (type === 'slow') this.slowTimer = 2.5; 
-            
-            if (this.hp <= 0 && this.hp + amount > 0) {
-                state.gold += this.reward;
-                createParticles(this.x, this.y, this.color, this.isBoss ? 80 : 20, this.isBoss ? 3 : 1);
-                createFloatingText(this.x, this.y, `+${this.reward}G`, '#fbbf24', 22);
-                if(this.isBoss) showEndScreen(true);
-            }
-        }
-
-        update(dt) {
-            this.wobble += dt * 6;
-            if (this.hitTimer > 0) this.hitTimer -= dt;
-            if (this.slowTimer > 0) this.slowTimer -= dt;
-
-            let speed = this.baseSpd * (this.slowTimer > 0 ? 0.4 : 1.0); 
-            let target = state.path[this.pathIdx + 1];
-            
-            if (target) {
-                let dx = target.x - this.x, dy = target.y - this.y;
-                let dist = Math.hypot(dx, dy), move = speed * dt;
-                if (dist > move) { this.x += (dx/dist)*move; this.y += (dy/dist)*move; } 
-                else { this.x = target.x; this.y = target.y; this.pathIdx++; }
-            } else {
-                state.life -= this.dmg; state.screenShake = 15;
-                createParticles(this.x, this.y, '#ef4444', 30, 2);
-                this.hp = 0; 
-                if (state.life <= 0) { state.life = 0; showEndScreen(false); }
-            }
-        }
-
-        draw(ctx) {
-            ctx.save(); ctx.translate(this.x, this.y);
-            if (this.slowTimer > 0) {
-                ctx.beginPath(); ctx.arc(0, 0, this.rad + 5 + Math.sin(this.wobble*2)*2, 0, Math.PI*2);
-                ctx.fillStyle = 'rgba(168, 85, 247, 0.3)'; ctx.fill();
-            }
-
-            ctx.fillStyle = this.hitTimer > 0 ? '#ffffff' : this.color;
-            ctx.shadowBlur = this.hitTimer > 0 ? 15 : 0; ctx.shadowColor = '#fff';
-
-            if (this.shape === 'boss') {
-                ctx.beginPath();
-                for(let i=0; i<10; i++) {
-                    let a = (i/10)*Math.PI*2, r = this.rad + Math.sin(this.wobble*1.5 + i)*8;
-                    ctx.lineTo(Math.cos(a)*r, Math.sin(a)*r);
-                }
-                ctx.fill();
-                ctx.fillStyle = "#000"; ctx.beginPath(); ctx.arc(-15, -10, 6, 0, Math.PI*2); ctx.arc(15, -10, 6, 0, Math.PI*2); ctx.fill();
-                ctx.fillStyle = "#fbbf24"; ctx.beginPath(); ctx.arc(-15, -10, 2, 0, Math.PI*2); ctx.arc(15, -10, 2, 0, Math.PI*2); ctx.fill();
-            } else if (this.shape === 'bat') {
-                let wy = Math.sin(this.wobble)*10;
-                ctx.beginPath(); ctx.arc(0,0,this.rad,0,Math.PI*2); ctx.fill();
-                ctx.beginPath(); ctx.moveTo(-this.rad, 0); ctx.lineTo(-this.rad-15, wy); ctx.lineTo(-this.rad, 5); ctx.fill();
-                ctx.beginPath(); ctx.moveTo(this.rad, 0); ctx.lineTo(this.rad+15, wy); ctx.lineTo(this.rad, 5); ctx.fill();
-                ctx.fillStyle = this.hitTimer > 0 ? '#000' : '#ef4444'; ctx.beginPath(); ctx.arc(-5,-2,2,0,Math.PI*2); ctx.arc(5,-2,2,0,Math.PI*2); ctx.fill();
-            } else if (this.shape === 'ghost') {
-                ctx.beginPath(); ctx.arc(0, -5, this.rad, Math.PI, 0);
-                ctx.lineTo(this.rad, this.rad); ctx.lineTo(this.rad/2, this.rad/2 + Math.sin(this.wobble)*3); 
-                ctx.lineTo(0, this.rad); ctx.lineTo(-this.rad/2, this.rad/2 - Math.sin(this.wobble)*3); ctx.lineTo(-this.rad, this.rad); ctx.fill();
-                ctx.fillStyle = this.hitTimer > 0 ? '#000' : '#fff'; ctx.beginPath(); ctx.arc(-4,-5,3,0,Math.PI*2); ctx.arc(4,-5,3,0,Math.PI*2); ctx.fill();
-            } else if (this.shape === 'square') {
-                ctx.fillRect(-this.rad, -this.rad, this.rad*2, this.rad*2);
-                ctx.fillStyle = 'rgba(0,0,0,0.3)'; ctx.fillRect(-this.rad/2, -this.rad/2, this.rad, this.rad);
-            } else {
-                let sy = 1 + Math.sin(this.wobble)*0.15; ctx.scale(1, sy);
-                ctx.beginPath(); ctx.arc(0, 0, this.rad, 0, Math.PI*2); ctx.fill();
-            }
-            ctx.restore();
-
-            let hpPct = Math.max(0, this.hp / this.maxHp);
-            ctx.fillStyle = 'rgba(0,0,0,0.6)'; ctx.fillRect(this.x - 18, this.y - this.rad - 14, 36, 5);
-            ctx.fillStyle = hpPct > 0.5 ? '#10b981' : (hpPct > 0.2 ? '#f59e0b' : '#ef4444');
-            ctx.fillRect(this.x - 18, this.y - this.rad - 14, 36 * hpPct, 5);
-        }
-    }
-
-    class Tower {
-        constructor(x, y, data) {
-            this.x = x; this.y = y; this.data = data;
-            this.cool = 0; this.angle = -Math.PI/2; this.target = null;
-            this.laserTime = 0; this.recoil = 0;
-        }
-
-        update(dt) {
-            this.cool -= dt;
-            if(this.laserTime > 0) this.laserTime -= dt;
-            if(this.recoil > 0) this.recoil -= dt * 5; 
-
-            this.target = null; let minDist = this.data.range;
-            for(let en of enemies) {
-                let d = Math.hypot(en.x - this.x, en.y - this.y);
-                if(d < minDist) { minDist = d; this.target = en; }
-            }
-
-            if (this.target) {
-                let tx = this.target.x, ty = this.target.y;
-                if(this.data.type !== 'laser') {
-                    let dist = Math.hypot(tx-this.x, ty-this.y);
-                    let travelTime = dist / (this.data.type === 'heavy' ? 200 : 350);
-                    let nextPath = state.path[this.target.pathIdx+1];
-                    if(nextPath) {
-                        let moveDist = this.target.baseSpd * travelTime;
-                        let a = Math.atan2(nextPath.y-ty, nextPath.x-tx);
-                        tx += Math.cos(a)*moveDist; ty += Math.sin(a)*moveDist;
-                    }
-                }
-                
-                let targetAngle = Math.atan2(ty - this.y, tx - this.x);
-                let diff = targetAngle - this.angle;
-                while (diff < -Math.PI) diff += Math.PI * 2;
-                while (diff > Math.PI) diff -= Math.PI * 2;
-                this.angle += diff * dt * 10;
-
-                if (this.cool <= 0) { this.fire(); this.cool = this.data.fireRate; }
-            }
-        }
-
-        fire() {
-            this.recoil = 1.0; 
-            if(this.data.type === 'laser') {
-                this.target.takeDamage(this.data.pwr, 'normal'); this.laserTime = 0.1;
-                createParticles(this.target.x, this.target.y, this.data.color, 2, 0.5);
-            } else {
-                let bx = this.x + Math.cos(this.angle)*15, by = this.y + Math.sin(this.angle)*15;
-                bullets.push(new Bullet(bx, by, this.target, this.data));
-                createParticles(bx, by, this.data.color, 5, 0.5);
-            }
-        }
-
-        draw(ctx) {
-            ctx.save(); ctx.translate(this.x, this.y);
-            
-            if(this.data.type === 'laser' && this.laserTime > 0 && this.target && enemies.includes(this.target)) {
-                ctx.save(); ctx.strokeStyle = this.data.color; ctx.lineWidth = 4 + Math.random()*2;
-                ctx.shadowBlur = 15; ctx.shadowColor = this.data.color; ctx.globalCompositeOperation = 'lighter';
-                ctx.beginPath(); ctx.moveTo(Math.cos(this.angle)*15, Math.sin(this.angle)*15); 
-                ctx.lineTo(this.target.x - this.x, this.target.y - this.y); ctx.stroke();
-                ctx.strokeStyle = '#fff'; ctx.lineWidth = 1.5; ctx.stroke(); ctx.restore();
-            }
-
-            ctx.rotate(this.angle);
-            let recoilDist = Math.max(0, this.recoil * -6); ctx.translate(recoilDist, 0);
-            
-            ctx.fillStyle = '#1e293b'; ctx.beginPath(); ctx.arc(0, 0, 14, 0, Math.PI*2); ctx.fill();
-            ctx.strokeStyle = '#334155'; ctx.lineWidth = 2; ctx.stroke();
-            
-            ctx.fillStyle = this.data.color;
-            if(this.data.type === 'basic') { ctx.fillRect(0, -6, 18, 12); ctx.fillStyle='rgba(255,255,255,0.5)'; ctx.fillRect(14, -4, 4, 8); } 
-            else if(this.data.type === 'laser') { ctx.fillRect(0, -3, 20, 6); ctx.beginPath(); ctx.arc(12, 0, 7, 0, Math.PI*2); ctx.fill(); ctx.fillStyle='#fff'; ctx.beginPath(); ctx.arc(12, 0, 3, 0, Math.PI*2); ctx.fill(); } 
-            else if(this.data.type === 'slow') { ctx.beginPath(); ctx.moveTo(15, 0); ctx.lineTo(0, -10); ctx.lineTo(-5, 0); ctx.lineTo(0, 10); ctx.fill(); } 
-            else if(this.data.type === 'splash') { ctx.beginPath(); ctx.arc(5, 0, 12, 0, Math.PI*2); ctx.fill(); ctx.fillStyle='#0f172a'; ctx.beginPath(); ctx.arc(5, 0, 6, 0, Math.PI*2); ctx.fill(); } 
-            else if(this.data.type === 'heavy') { ctx.beginPath(); ctx.moveTo(22, 0); ctx.lineTo(-5, -12); ctx.lineTo(-5, 12); ctx.fill(); ctx.fillStyle='#000'; ctx.beginPath(); ctx.arc(8, -5, 2, 0, Math.PI*2); ctx.fill(); }
-            ctx.restore();
-        }
-    }
-
-    class Bullet {
-        constructor(x, y, target, tData) {
-            this.x = x; this.y = y; this.target = target; this.data = tData;
-            this.speed = tData.type === 'heavy' ? 200 : 350; this.active = true;
-            this.tx = target.x; this.ty = target.y;
-        }
-
-        update(dt) {
-            if(!this.active) return;
-            if(enemies.includes(this.target)) { this.tx = this.target.x; this.ty = this.target.y; }
-            
-            let dx = this.tx - this.x, dy = this.ty - this.y;
-            let dist = Math.hypot(dx, dy), move = this.speed * dt;
-
-            if (dist > move) {
-                this.x += (dx/dist)*move; this.y += (dy/dist)*move;
-                if(Math.random() < 0.6) createParticles(this.x, this.y, this.data.color, 1, 0.1);
-            } else { this.hit(); this.active = false; }
-        }
-
-        hit() {
-            if(this.data.type === 'splash') {
-                createParticles(this.tx, this.ty, this.data.color, 30, 2);
-                createFloatingText(this.tx, this.ty-10, 'BOMB!', '#f472b6', 16);
-                state.screenShake += 3;
-                for(let en of enemies) { if(Math.hypot(en.x - this.tx, en.y - this.ty) < 90) en.takeDamage(this.data.pwr, 'normal'); }
-            } else if (this.data.type === 'heavy') {
-                createParticles(this.tx, this.ty, '#fbbf24', 40, 3);
-                state.screenShake += 5;
-                if(enemies.includes(this.target)) this.target.takeDamage(this.data.pwr, 'normal');
-            } else {
-                createParticles(this.tx, this.ty, this.data.color, 8, 1);
-                if(enemies.includes(this.target)) this.target.takeDamage(this.data.pwr, this.data.type);
-            }
-        }
-
-        draw(ctx) {
-            ctx.save(); ctx.translate(this.x, this.y); ctx.rotate(Math.atan2(this.ty - this.y, this.tx - this.x));
-            ctx.fillStyle = this.data.color; ctx.shadowBlur = 15; ctx.shadowColor = this.data.color; ctx.globalCompositeOperation = 'lighter';
-            if(this.data.type === 'splash') { ctx.beginPath(); ctx.arc(0,0,6,0,Math.PI*2); ctx.fill(); }
-            else if(this.data.type === 'heavy') { ctx.beginPath(); ctx.arc(0,0,10,0,Math.PI*2); ctx.fill(); ctx.fillStyle='#fff'; ctx.beginPath(); ctx.arc(-2,0,5,0,Math.PI*2); ctx.fill(); } 
-            else { ctx.fillRect(-6, -3, 12, 6); }
-            ctx.restore();
-        }
-    }
-
-    // --- 5. 시각 효과(VFX) 헬퍼 ---
-    function createParticles(x, y, color, amount, speedMult = 1) {
-        for (let i = 0; i < amount; i++) {
-            let angle = Math.random() * Math.PI * 2, speed = Math.random() * 120 * speedMult;
-            particles.push({ x, y, color, vx: Math.cos(angle)*speed, vy: Math.sin(angle)*speed, life: 1.0, size: Math.random() * 3.5 + 1.5 });
-        }
-    }
-    function createFloatingText(x, y, text, color, size=14) { texts.push({ x, y, text, color, size, life: 1.0, vy: -40 }); }
-
-    // --- 6. 입력 처리 ---
-    function resizeCanvas() {
-        const wrapper = document.getElementById('canvas-wrapper');
-        width = wrapper.clientWidth; height = wrapper.clientHeight;
-        canvas.width = width; canvas.height = height;
-        state.path = pathRatio.map(p => ({ x: p.x * width, y: p.y * height }));
-    }
-    window.addEventListener('resize', resizeCanvas);
-    setTimeout(resizeCanvas, 100);
-
-    function getEventPos(e) {
-        const rect = canvas.getBoundingClientRect();
-        let clientX = e.type.includes('touch') ? e.touches[0].clientX : e.clientX;
-        let clientY = e.type.includes('touch') ? e.touches[0].clientY : e.clientY;
-        return { x: clientX - rect.left, y: clientY - rect.top };
-    }
-
-    canvas.addEventListener('mousemove', (e) => { const p = getEventPos(e); state.mouseX = p.x; state.mouseY = p.y; state.isTouching = true; });
-    canvas.addEventListener('mouseleave', () => { state.isTouching = false; });
-    canvas.addEventListener('touchmove', (e) => { e.preventDefault(); const p = getEventPos(e); state.mouseX = p.x; state.mouseY = p.y; state.isTouching = true; }, {passive: false});
-    canvas.addEventListener('touchend', () => { state.isTouching = false; });
-
-    function handleAction(e) {
-        e.preventDefault(); if (state.status !== 'playing') return;
-        const p = getEventPos(e); let x = p.x, y = p.y; const basePos = state.path[state.path.length-1];
-        
-        if (Math.hypot(x - basePos.x, y - basePos.y) < 60) {
-            let cost = state.baseLv === 1 ? 500 : 1000;
-            if (state.baseLv < 3 && state.gold >= cost) {
-                state.gold -= cost; state.baseLv++;
-                createParticles(basePos.x, basePos.y, '#38bdf8', 60, 3);
-                createFloatingText(basePos.x, basePos.y - 40, 'LEVEL UP!', '#38bdf8', 26);
-                state.screenShake = 10;
-            } else if (state.baseLv >= 3) createFloatingText(basePos.x, basePos.y - 30, '최대 레벨', '#94a3b8');
-            else createFloatingText(basePos.x, basePos.y - 30, '자금 부족', '#ef4444');
-            return;
-        }
-
-        let tData = towerTypes[state.selectedTower];
-        if (state.gold >= tData.cost) {
-            let onPath = false;
-            for(let i=0; i<state.path.length-1; i++) {
-                let p1 = state.path[i], p2 = state.path[i+1];
-                let l2 = (p2.x-p1.x)**2 + (p2.y-p1.y)**2;
-                let t = l2===0 ? 0 : ((x-p1.x)*(p2.x-p1.x) + (y-p1.y)*(p2.y-p1.y)) / l2;
-                t = Math.max(0, Math.min(1, t));
-                if (Math.hypot(x - (p1.x + t*(p2.x-p1.x)), y - (p1.y + t*(p2.y-p1.y))) < 35) onPath = true;
-            }
-            let overlap = towers.some(t => Math.hypot(t.x - x, t.y - y) < 30);
-
-            if (!onPath && !overlap) {
-                state.gold -= tData.cost; towers.push(new Tower(x, y, tData));
-                createParticles(x, y, tData.color, 30, 1.5); state.screenShake = 2;
-            } else createFloatingText(x, y, '설치 불가', '#ef4444');
-        } else createFloatingText(x, y, '자금 부족', '#ef4444');
-    }
-    
-    canvas.addEventListener('mousedown', handleAction);
-    canvas.addEventListener('touchstart', handleAction, {passive: false});
-
-    // --- 7. UI 및 퀴즈 ---
-    window.selectTower = function(id) {
-        state.selectedTower = id;
-        document.querySelectorAll('.tower-btn').forEach(btn => btn.classList.remove('active'));
-        document.getElementById('tw'+id).classList.add('active');
-    }
 
     function nextQuiz() {
-        if (state.quizMode === 'normal') {
-            if (state.quizIdx < quizBank.length) state.currentQuiz = quizBank[state.quizIdx];
-            else { state.quizMode = state.wrongQuizzes.length > 0 ? 'review' : 'infinite'; state.quizIdx = 0; return nextQuiz(); }
-        } else if (state.quizMode === 'review') {
-            if (state.wrongQuizzes.length > 0) state.currentQuiz = state.wrongQuizzes[0];
-            else { state.quizMode = 'infinite'; return nextQuiz(); }
+        state.currentQuiz = quizBank[state.quizIdx % quizBank.length];
+        ui.text.innerText = state.currentQuiz.q;
+        if (state.currentQuiz.img) {
+            ui.img.src = state.currentQuiz.img;
+            ui.img.style.display = 'block';
         } else {
-            let pool = [...quizBank, ...state.wrongQuizzes, ...state.wrongQuizzes]; 
-            state.currentQuiz = pool[Math.floor(Math.random() * pool.length)];
+            ui.img.style.display = 'none';
         }
-
-        let prefix = state.quizMode === 'normal' ? `[임무 ${state.quizIdx+1}]` : (state.quizMode === 'review' ? '[복습 임무]' : '[무한 방어]');
-        ui.quizText.innerHTML = `<span style="color:#fbbf24; margin-right:5px; display:inline-block; margin-bottom:2px;">${prefix}</span><br/> ${state.currentQuiz.q}`;
-        for(let i=0; i<4; i++) {
-            let btn = document.getElementById('btn'+i);
-            btn.innerText = state.currentQuiz.a[i];
-            btn.style.background = ''; btn.style.borderColor = ''; btn.style.color = '';
-        }
+        for(let i=0; i<4; i++) document.getElementById('btn'+i).innerText = state.currentQuiz.a[i];
     }
 
     window.checkAnswer = function(idx) {
-        if (state.status !== 'playing') return;
-        let btn = document.getElementById('btn'+idx);
-        
         if (idx === state.currentQuiz.correct) {
             state.gold += 30;
-            btn.style.background = 'rgba(16, 185, 129, 0.2)'; btn.style.borderColor = '#10b981'; btn.style.color = '#fff';
-            createFloatingText(width/2, height/2 - 50, "정답! +30G", "#10b981", 32);
-            state.screenShake = 3; 
-            if (state.quizMode === 'normal') state.quizIdx++;
-            else if (state.quizMode === 'review') state.wrongQuizzes.shift();
-        } else {
-            state.gold = Math.max(0, state.gold - 10);
-            btn.style.background = 'rgba(239, 68, 68, 0.2)'; btn.style.borderColor = '#ef4444'; btn.style.color = '#fff';
-            let cBtn = document.getElementById('btn'+state.currentQuiz.correct);
-            cBtn.style.background = 'rgba(16, 185, 129, 0.2)'; cBtn.style.borderColor = '#10b981'; cBtn.style.color = '#fff';
-            
-            createFloatingText(width/2, height/2 - 50, "오답! -10G", "#ef4444", 32);
-            state.screenShake = 10; 
-            
-            if (!state.wrongQuizzes.some(w => w.id === state.currentQuiz.id)) state.wrongQuizzes.push(state.currentQuiz);
-            if (state.quizMode === 'normal') state.quizIdx++;
-            else if (state.quizMode === 'review') { let fail = state.wrongQuizzes.shift(); state.wrongQuizzes.push(fail); }
+            state.quizIdx++;
+            nextQuiz();
         }
-        setTimeout(nextQuiz, 1000);
+        ui.gold.innerText = state.gold;
     }
 
-    // --- 8. 메인 렌더링 루프 ---
-    function gameLoop(timestamp) {
-        if (state.status !== 'playing') return;
-        let dt = (timestamp - lastTime) / 1000; if (dt > 0.1) dt = 0.1; 
-        lastTime = timestamp; updateCore(dt); drawCore();
-        requestAnimationFrame(gameLoop);
-    }
-
-    function updateCore(dt) {
-        state.time += dt; bgOffset += dt * 20;
-        spawnTimer -= dt;
-        
-        let spawnRateMulti = state.difficulty === 'hard' ? 0.75 : 1.0; // 도전모드 스폰 25% 빠름
-        
-        if (spawnTimer <= 0 && state.time < 180) {
-            let type = 1;
-            if (state.time > 130) type = Math.floor(Math.random()*3) + 3; 
-            else if (state.time > 70) type = Math.floor(Math.random()*3) + 2; 
-            else if (state.time > 30) type = Math.floor(Math.random()*2) + 1; 
-            
-            let hpMult = 1.0 + (state.time / 60) * 0.4;
-            enemies.push(new Enemy(type, hpMult));
-            spawnTimer = Math.max(0.7, 2.5 - (state.time/60)*0.5) * spawnRateMulti;
-            ui.wave.innerText = `[ 작전 진행 : ${Math.floor(state.time)}초 ]`;
-        } else if (state.time >= 180 && !enemies.some(e => e.isBoss)) {
-            enemies.push(new Enemy('boss', 1.0));
-            ui.wave.innerText = "⚠️ 거대 돌연변이 접근 중 ⚠️"; ui.wave.style.color = "#ef4444";
-            spawnTimer = 9999;
-        }
-
-        if (state.baseLv > 1) {
-            state.baseCool -= dt; let range = state.baseLv === 2 ? 180 : 300;
-            if (state.baseCool <= 0) {
-                let basePos = state.path[state.path.length-1]; let target = null;
-                for(let en of enemies) { if (Math.hypot(en.x - basePos.x, en.y - basePos.y) < range) { target = en; break; } }
-                if (target) { bullets.push(new Bullet(basePos.x, basePos.y - 30, target, {type: 'basic', pwr: state.baseLv*25, color: '#60a5fa'})); state.baseCool = state.baseLv === 2 ? 1.2 : 0.6; }
-            }
-        }
-
-        for (let i = enemies.length - 1; i >= 0; i--) { enemies[i].update(dt); if (enemies[i].hp <= 0) enemies.splice(i, 1); }
-        towers.forEach(t => t.update(dt));
-        for (let i = bullets.length - 1; i >= 0; i--) { bullets[i].update(dt); if (!bullets[i].active) bullets.splice(i, 1); }
-        for (let i = particles.length - 1; i >= 0; i--) { let p = particles[i]; p.x += p.vx * dt; p.y += p.vy * dt; p.life -= dt * 1.5; if (p.life <= 0) particles.splice(i, 1); }
-        for (let i = texts.length - 1; i >= 0; i--) { let txt = texts[i]; txt.y += txt.vy * dt; txt.life -= dt * 1.2; if (txt.life <= 0) texts.splice(i, 1); }
-
-        ui.gold.innerText = state.gold; ui.life.innerText = Math.floor(Math.max(0, state.life)); ui.baseLv.innerText = state.baseLv;
-    }
-
-    function drawCore() {
-        ctx.save();
-        if (state.screenShake > 0) { let mag = state.screenShake; ctx.translate((Math.random()-0.5)*mag, (Math.random()-0.5)*mag); state.screenShake *= 0.85; if(state.screenShake < 0.5) state.screenShake = 0; }
-        ctx.clearRect(0, 0, width, height);
-
-        ctx.strokeStyle = 'rgba(255,255,255,0.03)'; ctx.lineWidth = 1; let gridSize = 40; let offX = bgOffset % gridSize, offY = bgOffset % gridSize;
-        ctx.beginPath(); for(let x = -offX; x < width; x += gridSize) { ctx.moveTo(x, 0); ctx.lineTo(x, height); } for(let y = -offY; y < height; y += gridSize) { ctx.moveTo(0, y); ctx.lineTo(width, y); } ctx.stroke();
-
-        ctx.lineJoin = 'round'; ctx.lineCap = 'round';
-        ctx.beginPath(); state.path.forEach((p, i) => i===0 ? ctx.moveTo(p.x, p.y) : ctx.lineTo(p.x, p.y)); ctx.strokeStyle = 'rgba(56, 189, 248, 0.15)'; ctx.lineWidth = 44; ctx.stroke();
-        ctx.strokeStyle = '#0f172a'; ctx.lineWidth = 36; ctx.stroke();
-        ctx.strokeStyle = 'rgba(56, 189, 248, 0.8)'; ctx.lineWidth = 2; ctx.setLineDash([15, 20]); ctx.lineDashOffset = -bgOffset * 2; ctx.stroke(); ctx.setLineDash([]);
-
-        const basePos = state.path[state.path.length-1]; drawBase(basePos.x, basePos.y, state.baseLv);
-        enemies.forEach(e => e.draw(ctx)); towers.forEach(t => t.draw(ctx)); bullets.forEach(b => b.draw(ctx));
-
-        ctx.globalCompositeOperation = 'lighter';
-        particles.forEach(p => { ctx.globalAlpha = Math.max(0, p.life); ctx.fillStyle = p.color; ctx.beginPath(); ctx.arc(p.x, p.y, p.size, 0, Math.PI*2); ctx.fill(); });
-        ctx.globalCompositeOperation = 'source-over'; ctx.globalAlpha = 1.0;
-
-        texts.forEach(t => { ctx.globalAlpha = Math.max(0, Math.min(1, t.life * 1.5)); ctx.fillStyle = t.color; ctx.font = `900 ${t.size}px 'Pretendard', sans-serif`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.lineWidth = 4; ctx.strokeStyle = '#000'; ctx.strokeText(t.text, t.x, t.y); ctx.fillText(t.text, t.x, t.y); });
-        ctx.globalAlpha = 1.0;
-
-        if (state.isTouching && state.gold >= towerTypes[state.selectedTower].cost) {
-            let tData = towerTypes[state.selectedTower];
-            ctx.beginPath(); ctx.arc(state.mouseX, state.mouseY, tData.range, 0, Math.PI*2); ctx.fillStyle = 'rgba(255, 255, 255, 0.1)'; ctx.fill(); ctx.strokeStyle = 'rgba(255, 255, 255, 0.5)'; ctx.lineWidth = 1; ctx.stroke();
-            ctx.globalAlpha = 0.5; let tempTower = new Tower(state.mouseX, state.mouseY, tData); tempTower.draw(ctx); ctx.globalAlpha = 1.0;
-        }
-        ctx.restore();
-    }
-
-    function drawBase(x, y, lv) {
-        ctx.save(); ctx.translate(x, y); ctx.shadowBlur = 20; ctx.shadowColor = "rgba(56, 189, 248, 0.6)";
-        ctx.fillStyle = 'rgba(255,255,255,0.8)'; ctx.font = "bold 13px sans-serif"; ctx.textAlign = "center";
-        let upStr = lv === 1 ? "UP(500G)" : (lv === 2 ? "UP(1000G)" : "MAX"); ctx.fillText(upStr, 0, 50);
-        if (lv === 1) { ctx.fillStyle = "#1e293b"; ctx.fillRect(-30, -20, 60, 40); ctx.fillStyle = "#38bdf8"; ctx.fillRect(-20, -10, 40, 15); ctx.fillStyle = "#0f172a"; ctx.beginPath(); ctx.arc(0, 20, 10, Math.PI, 0); ctx.fill(); } 
-        else if (lv === 2) { ctx.fillStyle = "#0f172a"; ctx.fillRect(-40, -25, 80, 50); ctx.fillStyle = "#334155"; ctx.beginPath(); ctx.arc(0, -25, 30, Math.PI, 0); ctx.fill(); ctx.fillStyle = "#60a5fa"; ctx.beginPath(); ctx.arc(0, -25, 18, Math.PI, 0); ctx.fill(); ctx.fillStyle = "#fbbf24"; ctx.fillRect(-40, -5, 80, 4); } 
-        else { ctx.fillStyle = "#020617"; ctx.fillRect(-45, -30, 90, 60); ctx.fillStyle = "#3b82f6"; ctx.beginPath(); ctx.moveTo(-25, -30); ctx.lineTo(0, -60); ctx.lineTo(25, -30); ctx.fill(); ctx.fillStyle = "#fbbf24"; ctx.fillRect(-45, -12, 90, 5); ctx.fillRect(-45, 8, 90, 5); ctx.fillStyle = "#fff"; ctx.shadowBlur=10; ctx.shadowColor="#fff"; ctx.beginPath(); ctx.arc(0, -40, 8, 0, Math.PI*2); ctx.fill(); }
-        ctx.restore();
+    window.startGame = function(mode) {
+        document.getElementById('overlay').style.display = 'none';
+        nextQuiz();
     }
 </script>
 </body>

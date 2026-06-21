@@ -10,156 +10,136 @@
             --danger: #ef4444; --danger-glow: rgba(239, 68, 68, 0.5);
             --success: #10b981; --success-glow: rgba(16, 185, 129, 0.5);
             --warning: #f59e0b; --warning-glow: rgba(245, 158, 11, 0.5);
-            --dark-bg: #0b1120; --panel-bg: rgba(15, 23, 42, 0.7);
+            --dark-bg: #0b1120; --panel-bg: rgba(15, 23, 42, 0.85);
         }
-        body { 
-            margin: 0; background: var(--dark-bg); color: white; font-family: 'Pretendard', 'Malgun Gothic', sans-serif; 
+        /* 모바일 화면 잘림 방지를 위해 100dvh 사용 및 높이 100% 고정 */
+        html, body { 
+            width: 100%; height: 100%; margin: 0; padding: 0; 
+            background: var(--dark-bg); color: white; font-family: 'Pretendard', 'Malgun Gothic', sans-serif; 
             overflow: hidden; touch-action: none; user-select: none; -webkit-user-select: none;
         }
-        #game-container { position: relative; width: 100vw; height: 100vh; display: flex; flex-direction: column; }
+        
+        #game-container { 
+            position: relative; width: 100%; 
+            height: 100vh; height: 100dvh; /* 핵심: 모바일 주소창 제외한 실제 화면 높이 */
+            display: flex; flex-direction: column; 
+        }
         
         #canvas-wrapper { flex-grow: 1; position: relative; width: 100%; height: 100%; overflow: hidden; background: radial-gradient(circle at center, #1e293b 0%, #0b1120 100%); }
-        canvas { display: block; width: 100%; height: 100%; box-shadow: inset 0 0 60px rgba(0,0,0,0.8); }
+        canvas { display: block; width: 100%; height: 100%; box-shadow: inset 0 0 40px rgba(0,0,0,0.8); }
         
         /* Glassmorphism UI Panel */
         #ui-panel { 
-            height: 280px; padding: 15px; 
+            flex-shrink: 0; /* 화면이 작아져도 이 패널은 찌그러지지 않음 */
+            height: auto; min-height: 220px; padding: 10px; 
             background: var(--panel-bg); 
             backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
             border-top: 1px solid rgba(255,255,255,0.1);
             display: flex; flex-direction: column; align-items: center; justify-content: space-between; 
-            box-sizing: border-box; z-index: 10; box-shadow: 0 -10px 30px rgba(0,0,0,0.5); width: 100%;
+            box-sizing: border-box; z-index: 10; box-shadow: 0 -10px 20px rgba(0,0,0,0.5); width: 100%;
         }
         
-        #quiz-box { width: 100%; max-width: 600px; background: rgba(0,0,0,0.4); border-radius: 12px; padding: 8px 12px; box-sizing: border-box; border: 1px solid rgba(255,255,255,0.05); margin-bottom: 5px; box-shadow: inset 0 0 10px rgba(0,0,0,0.5); }
-        #quiz-text { font-size: 1.05rem; font-weight: 700; text-align: center; color: #f8fafc; line-height: 1.4; word-break: keep-all; min-height: 2.8em; display: flex; align-items: center; justify-content: center; }
+        #quiz-box { width: 100%; max-width: 600px; background: rgba(0,0,0,0.4); border-radius: 8px; padding: 6px 10px; box-sizing: border-box; border: 1px solid rgba(255,255,255,0.05); margin-bottom: 5px; }
+        #quiz-text { font-size: 1rem; font-weight: 700; text-align: center; color: #f8fafc; line-height: 1.3; word-break: keep-all; min-height: 2.6em; display: flex; align-items: center; justify-content: center; }
         
-        .answer-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; width: 100%; max-width: 600px; margin-bottom: 5px;}
+        .answer-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; width: 100%; max-width: 600px; margin-bottom: 5px;}
         button.ans { 
-            padding: 12px 8px; font-size: 0.95rem; font-weight: 600; 
+            padding: 10px 6px; font-size: 0.9rem; font-weight: 600; 
             border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; 
             background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%); 
-            color: #cbd5e1; cursor: pointer; transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1); 
-            touch-action: manipulation; position: relative; overflow: hidden;
+            color: #cbd5e1; cursor: pointer; transition: all 0.15s; 
+            touch-action: manipulation;
         }
-        button.ans::after { content: ''; position: absolute; top:0; left:0; width:100%; height:100%; background: rgba(255,255,255,0.1); opacity: 0; transition: opacity 0.2s; }
-        button.ans:active::after { opacity: 1; }
-        button.ans:active { transform: scale(0.97); }
+        button.ans:active { transform: scale(0.96); background: rgba(59, 130, 246, 0.3); border-color: #60a5fa; color: white; }
 
-        .tower-selector { display: flex; gap: 8px; width: 100%; max-width: 600px; overflow-x: auto; padding: 5px 2px; scrollbar-width: none; }
+        .tower-selector { display: flex; gap: 6px; width: 100%; max-width: 600px; overflow-x: auto; padding: 5px 2px; scrollbar-width: none; align-items: stretch; }
         .tower-selector::-webkit-scrollbar { display: none; }
         
         .tower-btn { 
-            flex: 1; min-width: 70px; padding: 10px 2px; font-size: 0.75rem; font-weight: bold; 
-            border: 2px solid transparent; border-radius: 12px; 
+            flex: 1; min-width: 60px; padding: 6px 2px; font-size: 0.7rem; font-weight: bold; 
+            border: 2px solid transparent; border-radius: 10px; 
             background: rgba(15, 23, 42, 0.8); color: #94a3b8; 
             display: flex; flex-direction: column; align-items: center; justify-content: center;
-            cursor: pointer; transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); touch-action: manipulation;
+            cursor: pointer; transition: 0.2s; touch-action: manipulation;
         }
-        .tower-btn .t-icon { font-size: 1.6rem; margin-bottom: 4px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5)); }
-        .tower-btn .t-name { font-size: 0.75rem; text-align: center; line-height: 1.2; margin-bottom: 2px; }
+        .tower-btn .t-icon { font-size: 1.5rem; margin-bottom: 2px; filter: drop-shadow(0 2px 2px rgba(0,0,0,0.5)); }
         .tower-btn.active { 
-            background: rgba(59, 130, 246, 0.2); border-color: var(--primary); color: white; 
-            box-shadow: 0 0 20px var(--primary-glow); transform: translateY(-5px) scale(1.05);
+            background: rgba(59, 130, 246, 0.25); border-color: var(--primary); color: white; 
+            box-shadow: 0 0 15px var(--primary-glow); transform: translateY(-3px);
         }
 
         #stats { 
-            position: absolute; top: 15px; left: 15px; font-size: 0.95rem; font-weight: bold; 
-            color: white; pointer-events: none; z-index: 10; line-height: 1.6; 
+            position: absolute; top: 10px; left: 10px; font-size: 0.9rem; font-weight: bold; 
+            color: white; pointer-events: none; z-index: 10; line-height: 1.5; 
             background: rgba(0,0,0,0.6); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
-            padding: 10px 15px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            padding: 8px 12px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.1);
         }
-        .stat-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 2px; }
+        .stat-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 2px; }
         .stat-val { font-family: monospace; font-size: 1.1em; }
-        .gold-text { color: #fbbf24; text-shadow: 0 0 8px rgba(251, 191, 36, 0.5); }
-        .hp-text { color: #ef4444; text-shadow: 0 0 8px rgba(239, 68, 68, 0.5); }
+        .gold-text { color: #fbbf24; text-shadow: 0 0 5px rgba(251, 191, 36, 0.5); }
+        .hp-text { color: #ef4444; text-shadow: 0 0 5px rgba(239, 68, 68, 0.5); }
 
-        #modal-overlay {
+        /* 난이도 선택 & 모달 오버레이 */
+        #overlay {
             position: absolute; top:0; left:0; width:100%; height:100%;
-            background: rgba(0,0,0,0.85); z-index: 100; display: none;
+            background: rgba(11, 17, 32, 0.95); z-index: 100; display: flex;
             flex-direction: column; align-items: center; justify-content: center;
-            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); text-align: center;
         }
-        .modal-title { font-size: 3.5rem; font-weight: 900; margin-bottom: 10px; text-shadow: 0 0 30px currentColor; letter-spacing: 2px; }
-        .modal-desc { font-size: 1.2rem; margin-bottom: 40px; color: #e2e8f0; }
-        #restart-btn { 
-            padding: 16px 40px; font-size: 1.2rem; font-weight: bold; letter-spacing: 1px;
-            background: linear-gradient(135deg, var(--primary), #2563eb); color: white; border: none; border-radius: 30px; 
-            cursor: pointer; box-shadow: 0 10px 25px var(--primary-glow); 
-            transition: 0.2s; touch-action: manipulation;
+        .title-text { font-size: 2.5rem; font-weight: 900; margin-bottom: 10px; color: #fff; text-shadow: 0 0 20px var(--primary); }
+        .desc-text { font-size: 1rem; margin-bottom: 30px; color: #cbd5e1; line-height: 1.5; word-break: keep-all; padding: 0 20px;}
+        
+        .mode-btn { 
+            width: 80%; max-width: 300px; padding: 15px; margin-bottom: 15px;
+            font-size: 1.1rem; font-weight: bold; border-radius: 15px; cursor: pointer;
+            transition: 0.2s; display: flex; flex-direction: column; align-items: center; gap: 5px;
         }
-        #restart-btn:active { transform: scale(0.95); box-shadow: 0 5px 15px var(--primary-glow); }
+        .mode-normal { background: rgba(16, 185, 129, 0.1); border: 2px solid #10b981; color: #34d399; box-shadow: 0 0 15px rgba(16, 185, 129, 0.3); }
+        .mode-hard { background: rgba(239, 68, 68, 0.1); border: 2px solid #ef4444; color: #f87171; box-shadow: 0 0 15px rgba(239, 68, 68, 0.3); }
+        .mode-btn:active { transform: scale(0.95); }
+        .mode-btn span { font-size: 0.8rem; font-weight: normal; color: #94a3b8; }
 
-        /* 시작 화면 (메인 메뉴) 스타일 추가 */
-        #start-screen {
-            position: absolute; top:0; left:0; width:100%; height:100%;
-            background: radial-gradient(circle at center, #1e293b 0%, #0b1120 100%);
-            z-index: 200; display: flex; flex-direction: column; align-items: center; justify-content: center;
-        }
-        .start-title { font-size: 3.5rem; font-weight: 900; margin-bottom: 10px; color: #38bdf8; text-shadow: 0 0 30px rgba(56,189,248,0.6); text-align: center; line-height: 1.2; word-break: keep-all;}
-        .start-subtitle { font-size: 1.2rem; margin-bottom: 50px; color: #94a3b8; text-align: center;}
-        .diff-btn-container { display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; padding: 0 20px;}
-        .diff-btn {
-            padding: 20px 30px; font-size: 1.5rem; font-weight: bold; border-radius: 16px;
-            cursor: pointer; transition: 0.2s; border: 2px solid transparent; width: 240px;
-            display: flex; flex-direction: column; align-items: center; gap: 10px;
-            touch-action: manipulation; box-sizing: border-box;
-        }
-        .diff-btn.easy { background: rgba(16, 185, 129, 0.1); color: #10b981; border-color: #10b981; }
-        .diff-btn.easy:hover, .diff-btn.easy:active { background: #10b981; color: white; box-shadow: 0 0 20px rgba(16,185,129,0.5); transform: translateY(-5px); }
-        .diff-btn.hard { background: rgba(239, 68, 68, 0.1); color: #ef4444; border-color: #ef4444; }
-        .diff-btn.hard:hover, .diff-btn.hard:active { background: #ef4444; color: white; box-shadow: 0 0 20px rgba(239,68,68,0.5); transform: translateY(-5px); }
-        .diff-desc { font-size: 0.9rem; font-weight: normal; opacity: 0.9; text-align: center; word-break: keep-all;}
-
-        @media (max-width: 600px) {
-            #ui-panel { height: 280px; padding: 10px; }
-            #quiz-text { font-size: 0.95rem; min-height: 2.5em; }
-            button.ans { padding: 10px; font-size: 0.85rem; }
-            #stats { font-size: 0.85rem; top: 10px; left: 10px; padding: 8px 12px; }
+        @media (max-width: 400px) {
+            #quiz-text { font-size: 0.9rem; min-height: 2.4em; }
+            button.ans { padding: 8px 4px; font-size: 0.8rem; }
             .tower-btn .t-icon { font-size: 1.3rem; }
-            .tower-btn { min-width: 60px; font-size: 0.7rem; }
-            
-            .start-title { font-size: 2.5rem; }
-            .diff-btn { width: 100%; padding: 15px 20px; flex-direction: row; justify-content: space-between; text-align: left; align-items: flex-start;}
-            .diff-desc { font-size: 0.8rem; text-align: right; max-width: 60%;}
+            .title-text { font-size: 2rem; }
         }
     </style>
 </head>
 <body>
-<!-- 시작 화면 (메인 메뉴) 추가 -->
-<div id="start-screen">
-    <div class="start-title">연구소 디펜스 PRO<br><span style="font-size:2rem; color:#f8fafc;">빛과 화석의 수호자</span></div>
-    <div class="start-subtitle">난이도를 선택하여 작전을 시작하세요.</div>
-    <div class="diff-btn-container">
-        <button class="diff-btn easy" onclick="startGame('easy')">
-            <span>일반 모드</span>
-            <span class="diff-desc">자원 150G / 체력 100<br>표준 난이도 방어전</span>
-        </button>
-        <button class="diff-btn hard" onclick="startGame('hard')">
-            <span>도전 모드</span>
-            <span class="diff-desc">자원 100G / 체력 50<br>적군 강화 및 스폰 가속</span>
-        </button>
-    </div>
-</div>
-
-<!-- 게임 컨테이너 기본적으로 숨김 처리 -->
-<div id="game-container" style="display: none;">
+<div id="game-container">
     <div id="canvas-wrapper">
         <canvas id="gameCanvas"></canvas>
     </div>
     
     <div id="stats">
-        <div class="stat-row"><span>💰 자금</span> <span id="gold-val" class="stat-val gold-text">100</span></div>
+        <div class="stat-row"><span>💰 자금</span> <span id="gold-val" class="stat-val gold-text">0</span></div>
         <div class="stat-row"><span>🏢 기지 LV</span> <span id="base-lv" class="stat-val">1</span></div>
-        <div class="stat-row"><span>❤️ 내구도</span> <span id="life-val" class="stat-val hp-text">100</span></div>
-        <div class="stat-row" style="margin-top:5px; font-size:0.85em; color:#60a5fa; justify-content:center;" id="wave-val">시스템 가동 대기중...</div>
+        <div class="stat-row"><span>❤️ 내구도</span> <span id="life-val" class="stat-val hp-text">0</span></div>
+        <div class="stat-row" style="margin-top:4px; font-size:0.8em; color:#60a5fa; justify-content:center;" id="wave-val">시스템 대기중</div>
     </div>
     
-    <div id="modal-overlay">
-        <div id="modal-title" class="modal-title">VICTORY</div>
-        <div id="modal-desc" class="modal-desc">연구소를 안전하게 지켜냈습니다!</div>
-        <button id="restart-btn" onclick="initGame()">새 작전 시작</button>
+    <!-- 시작 화면 및 게임오버 화면 공용 오버레이 -->
+    <div id="overlay">
+        <div id="overlay-title" class="title-text">연구소 디펜스 PRO</div>
+        <div id="overlay-desc" class="desc-text">다가오는 몬스터들을 막기 위해<br>화석과 빛 에너지를 활용하여 방어탑을 건설하세요!</div>
+        
+        <div id="start-buttons">
+            <button class="mode-btn mode-normal" onclick="startGame('normal')">
+                일반 모드
+                <span>초보자용 (자금 150G / 체력 100)</span>
+            </button>
+            <button class="mode-btn mode-hard" onclick="startGame('hard')">
+                도전 모드
+                <span>숙련자용 (자금 100G / 체력 50 / 적 강화)</span>
+            </button>
+        </div>
+        <div id="restart-buttons" style="display: none;">
+            <button class="mode-btn mode-normal" onclick="location.reload()" style="color:#fff; border-color:var(--primary); background:var(--primary);">
+                메인 화면으로
+            </button>
+        </div>
     </div>
 
     <div id="ui-panel">
@@ -174,19 +154,19 @@
         </div>
         <div class="tower-selector">
             <div class="tower-btn active" id="tw1" onclick="selectTower(1)">
-                <div class="t-icon">⚡</div><div class="t-name">광자포</div><div style="color:#fbbf24; margin-top:2px;">40G</div>
+                <div class="t-icon">⚡</div><div>광자포</div><div style="color:#fbbf24; margin-top:2px;">40G</div>
             </div>
             <div class="tower-btn" id="tw2" onclick="selectTower(2)">
-                <div class="t-icon">💎</div><div class="t-name">프리즘<br>레이저</div><div style="color:#fbbf24; margin-top:2px;">100G</div>
+                <div class="t-icon">💎</div><div>프리즘</div><div style="color:#fbbf24; margin-top:2px;">100G</div>
             </div>
             <div class="tower-btn" id="tw3" onclick="selectTower(3)">
-                <div class="t-icon">🔶</div><div class="t-name">호박석<br>토템</div><div style="color:#fbbf24; margin-top:2px;">300G</div>
+                <div class="t-icon">🔶</div><div>호박석</div><div style="color:#fbbf24; margin-top:2px;">300G</div>
             </div>
             <div class="tower-btn" id="tw4" onclick="selectTower(4)">
-                <div class="t-icon">🌀</div><div class="t-name">나선<br>폭격기</div><div style="color:#fbbf24; margin-top:2px;">500G</div>
+                <div class="t-icon">🌀</div><div>나선폭격</div><div style="color:#fbbf24; margin-top:2px;">500G</div>
             </div>
             <div class="tower-btn" id="tw5" onclick="selectTower(5)">
-                <div class="t-icon">🚀</div><div class="t-name">티탄<br>캐논</div><div style="color:#fbbf24; margin-top:2px;">1000G</div>
+                <div class="t-icon">🚀</div><div>티탄캐논</div><div style="color:#fbbf24; margin-top:2px;">1000G</div>
             </div>
         </div>
     </div>
@@ -197,20 +177,15 @@
     const canvas = document.getElementById('gameCanvas');
     const ctx = canvas.getContext('2d');
     const ui = {
-        gold: document.getElementById('gold-val'),
-        life: document.getElementById('life-val'),
-        wave: document.getElementById('wave-val'),
-        baseLv: document.getElementById('base-lv'),
-        quizText: document.getElementById('quiz-text'),
-        modal: document.getElementById('modal-overlay'),
-        modalTitle: document.getElementById('modal-title'),
-        modalDesc: document.getElementById('modal-desc'),
-        startScreen: document.getElementById('start-screen'),
-        gameContainer: document.getElementById('game-container')
+        gold: document.getElementById('gold-val'), life: document.getElementById('life-val'),
+        wave: document.getElementById('wave-val'), baseLv: document.getElementById('base-lv'),
+        quizText: document.getElementById('quiz-text'), 
+        overlay: document.getElementById('overlay'), overlayTitle: document.getElementById('overlay-title'),
+        overlayDesc: document.getElementById('overlay-desc'),
+        startBtns: document.getElementById('start-buttons'), restartBtns: document.getElementById('restart-buttons')
     };
 
     let width, height;
-    let gameLoopId; // 프레임 정지용 변수 추가
 
     const quizBank = [
         { id: 1, q: "자갈, 모래, 진흙 등이 쌓여 층을 이루고 있는 것은?", a: ["퇴적물", "침식", "지층", "화석"], correct: 2 },
@@ -236,21 +211,20 @@
         { id: 22, q: "공룡 발자국 화석을 통해 추측할 수 없는 것은?", a: ["공룡의 크기", "공룡의 보폭", "공룡의 나이", "공룡이 걸어간 방향"], correct: 2 }
     ];
 
-    // 타워 데이터: 현대적 게임 기획 요소 적용
     const towerTypes = {
         1: { id: 1, name: "광자포", cost: 40, range: 110, pwr: 8, fireRate: 0.6, type: 'basic', color: '#fde047' },
-        2: { id: 2, name: "프리즘 레이저", cost: 100, range: 135, pwr: 4, fireRate: 0.05, type: 'laser', color: '#38bdf8' }, // 초당 20연타 (지속 빔)
-        3: { id: 3, name: "호박석 토템", cost: 300, range: 160, pwr: 20, fireRate: 1.5, type: 'slow', color: '#f59e0b' },  // 느려짐 부여 (호박석 주황색)
-        4: { id: 4, name: "나선 폭격기", cost: 500, range: 190, pwr: 45, fireRate: 2.0, type: 'splash', color: '#f472b6' }, // 광역 피해
-        5: { id: 5, name: "티탄 캐논", cost: 1000, range: 250, pwr: 250, fireRate: 3.0, type: 'heavy', color: '#ef4444' } // 초강력 둔탁한 한방
+        2: { id: 2, name: "프리즘", cost: 100, range: 135, pwr: 4, fireRate: 0.05, type: 'laser', color: '#38bdf8' },
+        3: { id: 3, name: "호박석", cost: 300, range: 160, pwr: 20, fireRate: 1.5, type: 'slow', color: '#a855f7' },
+        4: { id: 4, name: "나선폭격", cost: 500, range: 190, pwr: 45, fireRate: 2.0, type: 'splash', color: '#f472b6' },
+        5: { id: 5, name: "티탄캐논", cost: 1000, range: 250, pwr: 250, fireRate: 3.0, type: 'heavy', color: '#ef4444' }
     };
 
     const pathRatio = [{ x: 0, y: 0.15 }, { x: 0.8, y: 0.15 }, { x: 0.8, y: 0.4 }, { x: 0.2, y: 0.4 }, { x: 0.2, y: 0.65 }, { x: 0.8, y: 0.65 }, { x: 0.8, y: 0.85 }, { x: 0.5, y: 0.85 }];
 
-    // --- 2. 게임 상태 및 엔진 변수 ---
+    // --- 2. 게임 상태 엔진 ---
     let state = {
-        difficulty: 'easy', // 난이도 상태 추가
-        gold: 150, life: 100, status: 'playing', time: 0,
+        difficulty: 'normal', // 'normal' or 'hard'
+        gold: 150, life: 100, status: 'ready', time: 0,
         baseLv: 1, baseCool: 0, selectedTower: 1, screenShake: 0,
         path: [], quizIdx: 0, wrongQuizzes: [], quizMode: 'normal', currentQuiz: null,
         mouseX: -100, mouseY: -100, isTouching: false
@@ -259,7 +233,42 @@
     let enemies = [], towers = [], bullets = [], particles = [], texts = [];
     let lastTime = 0, spawnTimer = 0, bgOffset = 0;
 
-    // --- 3. 클래스 정의 (OOP 적용) ---
+    // --- 3. 게임 시작 로직 ---
+    window.startGame = function(mode) {
+        state.difficulty = mode;
+        ui.overlay.style.display = 'none';
+        ui.startBtns.style.display = 'none';
+        
+        state.gold = mode === 'hard' ? 100 : 150;
+        state.life = mode === 'hard' ? 50 : 100;
+        state.status = 'playing';
+        state.time = 0; state.baseLv = 1; state.wrongQuizzes = []; state.quizIdx = 0;
+        
+        enemies = []; towers = []; bullets = []; particles = []; texts = [];
+        spawnTimer = 2.0; 
+        
+        resizeCanvas(); nextQuiz();
+        lastTime = performance.now();
+        requestAnimationFrame(gameLoop);
+    };
+
+    function showEndScreen(isVictory) {
+        state.status = isVictory ? 'victory' : 'gameover';
+        ui.overlay.style.display = 'flex';
+        ui.restartBtns.style.display = 'block';
+        
+        if (isVictory) {
+            ui.overlayTitle.innerText = "VICTORY"; 
+            ui.overlayTitle.style.color = "#fbbf24"; ui.overlayTitle.style.textShadow = "0 0 20px #fbbf24";
+            ui.overlayDesc.innerText = "훌륭합니다! 연구소를 안전하게 지켜냈습니다!";
+        } else {
+            ui.overlayTitle.innerText = "MISSION FAILED"; 
+            ui.overlayTitle.style.color = "#ef4444"; ui.overlayTitle.style.textShadow = "0 0 20px #ef4444";
+            ui.overlayDesc.innerText = "방어선이 무너졌습니다... 다시 도전하세요!";
+        }
+    }
+
+    // --- 4. 클래스 정의 ---
     class Enemy {
         constructor(type, hpMultiplier) {
             this.type = type; this.pathIdx = 0;
@@ -279,30 +288,24 @@
             let stat = bStats[type];
             this.name = stat.name; this.color = stat.color; this.shape = stat.shape;
             
-            // 난이도에 따른 적 스펙 강화 (도전 모드: 체력 1.5배, 속도 1.2배)
-            let diffHpMult = state.difficulty === 'hard' ? 1.5 : 1.0;
-            let diffSpdMult = state.difficulty === 'hard' ? 1.2 : 1.0;
-
-            this.maxHp = stat.hp * hpMultiplier * diffHpMult; this.hp = this.maxHp;
-            this.baseSpd = stat.spd * diffSpdMult; this.rad = stat.rad;
-            this.reward = stat.reward; this.dmg = stat.dmg;
+            // 도전모드일 경우 적 체력 1.5배, 이동속도 1.2배
+            let finalHpMult = hpMultiplier * (state.difficulty === 'hard' ? 1.5 : 1.0);
+            this.maxHp = stat.hp * finalHpMult; this.hp = this.maxHp;
+            this.baseSpd = stat.spd * (state.difficulty === 'hard' ? 1.2 : 1.0);
+            
+            this.rad = stat.rad; this.reward = stat.reward; this.dmg = stat.dmg;
             this.isBoss = (type === 'boss');
         }
 
         takeDamage(amount, type) {
-            this.hp -= amount;
-            this.hitTimer = 0.1; // 피격 시 0.1초 동안 하얗게 점멸
-            if (type === 'slow') this.slowTimer = 2.5; // 삼엽충 공격 시 2.5초 이속 감소
+            this.hp -= amount; this.hitTimer = 0.1; 
+            if (type === 'slow') this.slowTimer = 2.5; 
             
             if (this.hp <= 0 && this.hp + amount > 0) {
                 state.gold += this.reward;
                 createParticles(this.x, this.y, this.color, this.isBoss ? 80 : 20, this.isBoss ? 3 : 1);
                 createFloatingText(this.x, this.y, `+${this.reward}G`, '#fbbf24', 22);
-                if(this.isBoss) {
-                    state.status = 'victory';
-                    ui.modalTitle.innerText = "VICTORY"; ui.modalTitle.style.color = "#fbbf24";
-                    ui.modalDesc.innerText = "연구소를 안전하게 지켜냈습니다!"; ui.modal.style.display = 'flex';
-                }
+                if(this.isBoss) showEndScreen(true);
             }
         }
 
@@ -311,7 +314,7 @@
             if (this.hitTimer > 0) this.hitTimer -= dt;
             if (this.slowTimer > 0) this.slowTimer -= dt;
 
-            let speed = this.baseSpd * (this.slowTimer > 0 ? 0.4 : 1.0); // 느려짐 60% 감소
+            let speed = this.baseSpd * (this.slowTimer > 0 ? 0.4 : 1.0); 
             let target = state.path[this.pathIdx + 1];
             
             if (target) {
@@ -323,22 +326,15 @@
                 state.life -= this.dmg; state.screenShake = 15;
                 createParticles(this.x, this.y, '#ef4444', 30, 2);
                 this.hp = 0; 
-                if (state.life <= 0) {
-                    state.life = 0; state.status = 'gameover';
-                    ui.modalTitle.innerText = "GAME OVER"; ui.modalTitle.style.color = "#ef4444";
-                    ui.modalDesc.innerText = "방어선이 뚫렸습니다..."; ui.modal.style.display = 'flex';
-                }
+                if (state.life <= 0) { state.life = 0; showEndScreen(false); }
             }
         }
 
         draw(ctx) {
             ctx.save(); ctx.translate(this.x, this.y);
-            
-            // 디버프 오라
             if (this.slowTimer > 0) {
                 ctx.beginPath(); ctx.arc(0, 0, this.rad + 5 + Math.sin(this.wobble*2)*2, 0, Math.PI*2);
-                ctx.fillStyle = 'rgba(245, 158, 11, 0.3)'; // 호박석 주황색 오라
-                ctx.fill();
+                ctx.fillStyle = 'rgba(168, 85, 247, 0.3)'; ctx.fill();
             }
 
             ctx.fillStyle = this.hitTimer > 0 ? '#ffffff' : this.color;
@@ -373,7 +369,6 @@
             }
             ctx.restore();
 
-            // 체력바
             let hpPct = Math.max(0, this.hp / this.maxHp);
             ctx.fillStyle = 'rgba(0,0,0,0.6)'; ctx.fillRect(this.x - 18, this.y - this.rad - 14, 36, 5);
             ctx.fillStyle = hpPct > 0.5 ? '#10b981' : (hpPct > 0.2 ? '#f59e0b' : '#ef4444');
@@ -391,7 +386,7 @@
         update(dt) {
             this.cool -= dt;
             if(this.laserTime > 0) this.laserTime -= dt;
-            if(this.recoil > 0) this.recoil -= dt * 5; // 반동 회복
+            if(this.recoil > 0) this.recoil -= dt * 5; 
 
             this.target = null; let minDist = this.data.range;
             for(let en of enemies) {
@@ -400,9 +395,7 @@
             }
 
             if (this.target) {
-                // 부드러운 회전 (보간)
                 let tx = this.target.x, ty = this.target.y;
-                // 리드샷 (미래 위치 예측 - 티라노 등 투사체가 느린 경우)
                 if(this.data.type !== 'laser') {
                     let dist = Math.hypot(tx-this.x, ty-this.y);
                     let travelTime = dist / (this.data.type === 'heavy' ? 200 : 350);
@@ -415,7 +408,6 @@
                 }
                 
                 let targetAngle = Math.atan2(ty - this.y, tx - this.x);
-                // 각도 보간 (최단 방향)
                 let diff = targetAngle - this.angle;
                 while (diff < -Math.PI) diff += Math.PI * 2;
                 while (diff > Math.PI) diff -= Math.PI * 2;
@@ -426,18 +418,13 @@
         }
 
         fire() {
-            this.recoil = 1.0; // 반동 애니메이션 시작
+            this.recoil = 1.0; 
             if(this.data.type === 'laser') {
-                this.target.takeDamage(this.data.pwr, 'normal');
-                this.laserTime = 0.1;
+                this.target.takeDamage(this.data.pwr, 'normal'); this.laserTime = 0.1;
                 createParticles(this.target.x, this.target.y, this.data.color, 2, 0.5);
             } else {
-                // 포구 위치 계산
-                let bx = this.x + Math.cos(this.angle)*15;
-                let by = this.y + Math.sin(this.angle)*15;
+                let bx = this.x + Math.cos(this.angle)*15, by = this.y + Math.sin(this.angle)*15;
                 bullets.push(new Bullet(bx, by, this.target, this.data));
-                
-                // 포구 번쩍임
                 createParticles(bx, by, this.data.color, 5, 0.5);
             }
         }
@@ -445,56 +432,26 @@
         draw(ctx) {
             ctx.save(); ctx.translate(this.x, this.y);
             
-            // 레이저 빔
             if(this.data.type === 'laser' && this.laserTime > 0 && this.target && enemies.includes(this.target)) {
                 ctx.save(); ctx.strokeStyle = this.data.color; ctx.lineWidth = 4 + Math.random()*2;
-                ctx.shadowBlur = 15; ctx.shadowColor = this.data.color;
-                ctx.globalCompositeOperation = 'lighter';
+                ctx.shadowBlur = 15; ctx.shadowColor = this.data.color; ctx.globalCompositeOperation = 'lighter';
                 ctx.beginPath(); ctx.moveTo(Math.cos(this.angle)*15, Math.sin(this.angle)*15); 
                 ctx.lineTo(this.target.x - this.x, this.target.y - this.y); ctx.stroke();
-                // 빔 코어
-                ctx.strokeStyle = '#fff'; ctx.lineWidth = 1.5; ctx.stroke();
-                ctx.restore();
+                ctx.strokeStyle = '#fff'; ctx.lineWidth = 1.5; ctx.stroke(); ctx.restore();
             }
 
-            // 본체 회전 및 반동(뒤로 밀림) 적용
             ctx.rotate(this.angle);
-            let recoilDist = Math.max(0, this.recoil * -6);
-            ctx.translate(recoilDist, 0);
+            let recoilDist = Math.max(0, this.recoil * -6); ctx.translate(recoilDist, 0);
             
-            // 타워 디자인 (메뉴 아이콘과 일치하는 세련된 형태로 변경)
             ctx.fillStyle = '#1e293b'; ctx.beginPath(); ctx.arc(0, 0, 14, 0, Math.PI*2); ctx.fill();
             ctx.strokeStyle = '#334155'; ctx.lineWidth = 2; ctx.stroke();
             
-            if(this.data.type === 'basic') { 
-                // 1. 광자포 (번개/빛)
-                ctx.fillStyle = '#64748b'; ctx.fillRect(0, -5, 16, 10); 
-                ctx.fillStyle = this.data.color; ctx.fillRect(10, -4, 6, 8); 
-                ctx.beginPath(); ctx.arc(0, 0, 6, 0, Math.PI*2); ctx.fill();
-            } else if(this.data.type === 'laser') { 
-                // 2. 프리즘 레이저 (보석/프리즘)
-                ctx.fillStyle = '#475569'; ctx.fillRect(0, -4, 18, 8); 
-                ctx.fillStyle = this.data.color; 
-                ctx.beginPath(); ctx.moveTo(6, -6); ctx.lineTo(14, 0); ctx.lineTo(6, 6); ctx.lineTo(0, 0); ctx.fill();
-                ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.arc(14, 0, 3, 0, Math.PI*2); ctx.fill();
-            } else if(this.data.type === 'slow') { 
-                // 3. 호박석 토템 (보석/호박석)
-                ctx.fillStyle = this.data.color; 
-                ctx.beginPath(); ctx.moveTo(12, 0); ctx.lineTo(0, -10); ctx.lineTo(-12, 0); ctx.lineTo(0, 10); ctx.fill(); 
-                ctx.fillStyle = 'rgba(255,255,255,0.4)'; 
-                ctx.beginPath(); ctx.moveTo(6, 0); ctx.lineTo(0, -5); ctx.lineTo(-6, 0); ctx.lineTo(0, 5); ctx.fill(); 
-            } else if(this.data.type === 'splash') { 
-                // 4. 나선 폭격기 (나선형 모티브 대포)
-                ctx.fillStyle = '#475569'; ctx.beginPath(); ctx.arc(5, 0, 11, 0, Math.PI*2); ctx.fill(); 
-                ctx.strokeStyle = this.data.color; ctx.lineWidth = 2; 
-                ctx.beginPath(); ctx.arc(5, 0, 7, 0, Math.PI); ctx.arc(5, 2, 3, Math.PI, 0); ctx.stroke();
-                ctx.fillStyle = '#0f172a'; ctx.fillRect(14, -3, 6, 6);
-            } else if(this.data.type === 'heavy') { 
-                // 5. 티탄 캐논 (거대 뼈대/레일건)
-                ctx.fillStyle = '#334155'; ctx.beginPath(); ctx.moveTo(22, -6); ctx.lineTo(-4, -12); ctx.lineTo(-4, 12); ctx.lineTo(22, 6); ctx.fill(); 
-                ctx.fillStyle = '#0f172a'; ctx.fillRect(18, -4, 6, 8);
-                ctx.fillStyle = this.data.color; ctx.fillRect(-2, -8, 4, 16);
-            }
+            ctx.fillStyle = this.data.color;
+            if(this.data.type === 'basic') { ctx.fillRect(0, -6, 18, 12); ctx.fillStyle='rgba(255,255,255,0.5)'; ctx.fillRect(14, -4, 4, 8); } 
+            else if(this.data.type === 'laser') { ctx.fillRect(0, -3, 20, 6); ctx.beginPath(); ctx.arc(12, 0, 7, 0, Math.PI*2); ctx.fill(); ctx.fillStyle='#fff'; ctx.beginPath(); ctx.arc(12, 0, 3, 0, Math.PI*2); ctx.fill(); } 
+            else if(this.data.type === 'slow') { ctx.beginPath(); ctx.moveTo(15, 0); ctx.lineTo(0, -10); ctx.lineTo(-5, 0); ctx.lineTo(0, 10); ctx.fill(); } 
+            else if(this.data.type === 'splash') { ctx.beginPath(); ctx.arc(5, 0, 12, 0, Math.PI*2); ctx.fill(); ctx.fillStyle='#0f172a'; ctx.beginPath(); ctx.arc(5, 0, 6, 0, Math.PI*2); ctx.fill(); } 
+            else if(this.data.type === 'heavy') { ctx.beginPath(); ctx.moveTo(22, 0); ctx.lineTo(-5, -12); ctx.lineTo(-5, 12); ctx.fill(); ctx.fillStyle='#000'; ctx.beginPath(); ctx.arc(8, -5, 2, 0, Math.PI*2); ctx.fill(); }
             ctx.restore();
         }
     }
@@ -502,10 +459,7 @@
     class Bullet {
         constructor(x, y, target, tData) {
             this.x = x; this.y = y; this.target = target; this.data = tData;
-            this.speed = tData.type === 'heavy' ? 200 : 350; 
-            this.active = true;
-            
-            // 예측 사격용 고정 타겟 위치 (투사체가 날아가는 도중 적이 죽어도 그 방향으로 날아감)
+            this.speed = tData.type === 'heavy' ? 200 : 350; this.active = true;
             this.tx = target.x; this.ty = target.y;
         }
 
@@ -518,11 +472,8 @@
 
             if (dist > move) {
                 this.x += (dx/dist)*move; this.y += (dy/dist)*move;
-                // 꼬리 이펙트
                 if(Math.random() < 0.6) createParticles(this.x, this.y, this.data.color, 1, 0.1);
-            } else {
-                this.hit(); this.active = false;
-            }
+            } else { this.hit(); this.active = false; }
         }
 
         hit() {
@@ -530,9 +481,7 @@
                 createParticles(this.tx, this.ty, this.data.color, 30, 2);
                 createFloatingText(this.tx, this.ty-10, 'BOMB!', '#f472b6', 16);
                 state.screenShake += 3;
-                for(let en of enemies) {
-                    if(Math.hypot(en.x - this.tx, en.y - this.ty) < 90) en.takeDamage(this.data.pwr, 'normal');
-                }
+                for(let en of enemies) { if(Math.hypot(en.x - this.tx, en.y - this.ty) < 90) en.takeDamage(this.data.pwr, 'normal'); }
             } else if (this.data.type === 'heavy') {
                 createParticles(this.tx, this.ty, '#fbbf24', 40, 3);
                 state.screenShake += 5;
@@ -544,62 +493,25 @@
         }
 
         draw(ctx) {
-            ctx.save(); ctx.translate(this.x, this.y);
-            ctx.rotate(Math.atan2(this.ty - this.y, this.tx - this.x));
-            ctx.fillStyle = this.data.color;
-            ctx.shadowBlur = 15; ctx.shadowColor = this.data.color;
-            ctx.globalCompositeOperation = 'lighter';
-
+            ctx.save(); ctx.translate(this.x, this.y); ctx.rotate(Math.atan2(this.ty - this.y, this.tx - this.x));
+            ctx.fillStyle = this.data.color; ctx.shadowBlur = 15; ctx.shadowColor = this.data.color; ctx.globalCompositeOperation = 'lighter';
             if(this.data.type === 'splash') { ctx.beginPath(); ctx.arc(0,0,6,0,Math.PI*2); ctx.fill(); }
-            else if(this.data.type === 'heavy') { 
-                ctx.beginPath(); ctx.arc(0,0,10,0,Math.PI*2); ctx.fill(); 
-                ctx.fillStyle='#fff'; ctx.beginPath(); ctx.arc(-2,0,5,0,Math.PI*2); ctx.fill(); 
-            } else { ctx.fillRect(-6, -3, 12, 6); }
+            else if(this.data.type === 'heavy') { ctx.beginPath(); ctx.arc(0,0,10,0,Math.PI*2); ctx.fill(); ctx.fillStyle='#fff'; ctx.beginPath(); ctx.arc(-2,0,5,0,Math.PI*2); ctx.fill(); } 
+            else { ctx.fillRect(-6, -3, 12, 6); }
             ctx.restore();
         }
     }
 
-    // --- 4. 시각 효과(VFX) 헬퍼 ---
+    // --- 5. 시각 효과(VFX) 헬퍼 ---
     function createParticles(x, y, color, amount, speedMult = 1) {
         for (let i = 0; i < amount; i++) {
             let angle = Math.random() * Math.PI * 2, speed = Math.random() * 120 * speedMult;
-            particles.push({
-                x, y, color, vx: Math.cos(angle)*speed, vy: Math.sin(angle)*speed,
-                life: 1.0, size: Math.random() * 3.5 + 1.5
-            });
+            particles.push({ x, y, color, vx: Math.cos(angle)*speed, vy: Math.sin(angle)*speed, life: 1.0, size: Math.random() * 3.5 + 1.5 });
         }
     }
+    function createFloatingText(x, y, text, color, size=14) { texts.push({ x, y, text, color, size, life: 1.0, vy: -40 }); }
 
-    function createFloatingText(x, y, text, color, size=14) {
-        texts.push({ x, y, text, color, size, life: 1.0, vy: -40 });
-    }
-
-    // --- 5. 게임 로직 및 초기화 ---
-    window.startGame = function(difficulty) {
-        ui.startScreen.style.display = 'none';
-        ui.gameContainer.style.display = 'flex';
-        initGame(difficulty);
-    }
-
-    function initGame(difficulty = state.difficulty) {
-        if(gameLoopId) cancelAnimationFrame(gameLoopId); // 기존 루프 초기화
-
-        state = {
-            difficulty: difficulty,
-            gold: difficulty === 'hard' ? 100 : 150, // 하드모드는 자금 100G로 시작
-            life: difficulty === 'hard' ? 50 : 100,  // 하드모드는 목숨 50으로 시작
-            status: 'playing', time: 0, baseLv: 1, baseCool: 0,
-            selectedTower: 1, screenShake: 0, path: [], quizIdx: 0, wrongQuizzes: [], 
-            quizMode: 'normal', currentQuiz: null, mouseX: -100, mouseY: -100, isTouching: false
-        };
-        enemies = []; towers = []; bullets = []; particles = []; texts = [];
-        spawnTimer = 2.0; ui.modal.style.display = 'none';
-        
-        resizeCanvas(); nextQuiz();
-        lastTime = performance.now();
-        gameLoopId = requestAnimationFrame(gameLoop);
-    }
-
+    // --- 6. 입력 처리 ---
     function resizeCanvas() {
         const wrapper = document.getElementById('canvas-wrapper');
         width = wrapper.clientWidth; height = wrapper.clientHeight;
@@ -607,8 +519,8 @@
         state.path = pathRatio.map(p => ({ x: p.x * width, y: p.y * height }));
     }
     window.addEventListener('resize', resizeCanvas);
+    setTimeout(resizeCanvas, 100);
 
-    // 입력 처리 (터치 & 마우스)
     function getEventPos(e) {
         const rect = canvas.getBoundingClientRect();
         let clientX = e.type.includes('touch') ? e.touches[0].clientX : e.clientX;
@@ -623,10 +535,8 @@
 
     function handleAction(e) {
         e.preventDefault(); if (state.status !== 'playing') return;
-        const p = getEventPos(e);
-        let x = p.x, y = p.y; const basePos = state.path[state.path.length-1];
+        const p = getEventPos(e); let x = p.x, y = p.y; const basePos = state.path[state.path.length-1];
         
-        // 1. 기지 업그레이드 클릭
         if (Math.hypot(x - basePos.x, y - basePos.y) < 60) {
             let cost = state.baseLv === 1 ? 500 : 1000;
             if (state.baseLv < 3 && state.gold >= cost) {
@@ -639,7 +549,6 @@
             return;
         }
 
-        // 2. 타워 설치
         let tData = towerTypes[state.selectedTower];
         if (state.gold >= tData.cost) {
             let onPath = false;
@@ -653,10 +562,8 @@
             let overlap = towers.some(t => Math.hypot(t.x - x, t.y - y) < 30);
 
             if (!onPath && !overlap) {
-                state.gold -= tData.cost;
-                towers.push(new Tower(x, y, tData));
-                createParticles(x, y, tData.color, 30, 1.5);
-                state.screenShake = 2;
+                state.gold -= tData.cost; towers.push(new Tower(x, y, tData));
+                createParticles(x, y, tData.color, 30, 1.5); state.screenShake = 2;
             } else createFloatingText(x, y, '설치 불가', '#ef4444');
         } else createFloatingText(x, y, '자금 부족', '#ef4444');
     }
@@ -664,7 +571,7 @@
     canvas.addEventListener('mousedown', handleAction);
     canvas.addEventListener('touchstart', handleAction, {passive: false});
 
-    // --- 6. UI 및 퀴즈 ---
+    // --- 7. UI 및 퀴즈 ---
     window.selectTower = function(id) {
         state.selectedTower = id;
         document.querySelectorAll('.tower-btn').forEach(btn => btn.classList.remove('active'));
@@ -679,12 +586,12 @@
             if (state.wrongQuizzes.length > 0) state.currentQuiz = state.wrongQuizzes[0];
             else { state.quizMode = 'infinite'; return nextQuiz(); }
         } else {
-            let pool = [...quizBank, ...state.wrongQuizzes, ...state.wrongQuizzes]; // 오답 확률 3배
+            let pool = [...quizBank, ...state.wrongQuizzes, ...state.wrongQuizzes]; 
             state.currentQuiz = pool[Math.floor(Math.random() * pool.length)];
         }
 
         let prefix = state.quizMode === 'normal' ? `[임무 ${state.quizIdx+1}]` : (state.quizMode === 'review' ? '[복습 임무]' : '[무한 방어]');
-        ui.quizText.innerHTML = `<span style="color:#fbbf24; margin-right:8px; display:inline-block; margin-bottom:5px;">${prefix}</span><br/> ${state.currentQuiz.q}`;
+        ui.quizText.innerHTML = `<span style="color:#fbbf24; margin-right:5px; display:inline-block; margin-bottom:2px;">${prefix}</span><br/> ${state.currentQuiz.q}`;
         for(let i=0; i<4; i++) {
             let btn = document.getElementById('btn'+i);
             btn.innerText = state.currentQuiz.a[i];
@@ -710,44 +617,38 @@
             cBtn.style.background = 'rgba(16, 185, 129, 0.2)'; cBtn.style.borderColor = '#10b981'; cBtn.style.color = '#fff';
             
             createFloatingText(width/2, height/2 - 50, "오답! -10G", "#ef4444", 32);
-            state.screenShake = 12; 
+            state.screenShake = 10; 
             
             if (!state.wrongQuizzes.some(w => w.id === state.currentQuiz.id)) state.wrongQuizzes.push(state.currentQuiz);
             if (state.quizMode === 'normal') state.quizIdx++;
             else if (state.quizMode === 'review') { let fail = state.wrongQuizzes.shift(); state.wrongQuizzes.push(fail); }
         }
-        setTimeout(nextQuiz, 1200);
+        setTimeout(nextQuiz, 1000);
     }
 
-    // --- 7. 메인 루프 ---
+    // --- 8. 메인 렌더링 루프 ---
     function gameLoop(timestamp) {
         if (state.status !== 'playing') return;
-        let dt = (timestamp - lastTime) / 1000;
-        if (dt > 0.1) dt = 0.1; // 브라우저 백그라운드 멈춤 대응
-        lastTime = timestamp;
-
-        updateCore(dt); drawCore();
+        let dt = (timestamp - lastTime) / 1000; if (dt > 0.1) dt = 0.1; 
+        lastTime = timestamp; updateCore(dt); drawCore();
         requestAnimationFrame(gameLoop);
     }
 
     function updateCore(dt) {
         state.time += dt; bgOffset += dt * 20;
-
-        // 적 스폰
         spawnTimer -= dt;
+        
+        let spawnRateMulti = state.difficulty === 'hard' ? 0.75 : 1.0; // 도전모드 스폰 25% 빠름
+        
         if (spawnTimer <= 0 && state.time < 180) {
             let type = 1;
-            if (state.time > 130) type = Math.floor(Math.random()*3) + 3; // 3,4,5
-            else if (state.time > 70) type = Math.floor(Math.random()*3) + 2; // 2,3,4
-            else if (state.time > 30) type = Math.floor(Math.random()*2) + 1; // 1,2
+            if (state.time > 130) type = Math.floor(Math.random()*3) + 3; 
+            else if (state.time > 70) type = Math.floor(Math.random()*3) + 2; 
+            else if (state.time > 30) type = Math.floor(Math.random()*2) + 1; 
             
             let hpMult = 1.0 + (state.time / 60) * 0.4;
             enemies.push(new Enemy(type, hpMult));
-            
-            // 난이도에 따른 스폰 간격 조절 (하드모드는 25% 빠르게 스폰)
-            let baseSpawn = Math.max(0.7, 2.5 - (state.time/60)*0.5);
-            spawnTimer = state.difficulty === 'hard' ? baseSpawn * 0.75 : baseSpawn;
-            
+            spawnTimer = Math.max(0.7, 2.5 - (state.time/60)*0.5) * spawnRateMulti;
             ui.wave.innerText = `[ 작전 진행 : ${Math.floor(state.time)}초 ]`;
         } else if (state.time >= 180 && !enemies.some(e => e.isBoss)) {
             enemies.push(new Enemy('boss', 1.0));
@@ -755,138 +656,64 @@
             spawnTimer = 9999;
         }
 
-        // 기지 자동 방어 (LV 2, 3)
         if (state.baseLv > 1) {
-            state.baseCool -= dt;
-            let range = state.baseLv === 2 ? 180 : 300;
+            state.baseCool -= dt; let range = state.baseLv === 2 ? 180 : 300;
             if (state.baseCool <= 0) {
-                let basePos = state.path[state.path.length-1];
-                let target = null;
+                let basePos = state.path[state.path.length-1]; let target = null;
                 for(let en of enemies) { if (Math.hypot(en.x - basePos.x, en.y - basePos.y) < range) { target = en; break; } }
-                if (target) {
-                    bullets.push(new Bullet(basePos.x, basePos.y - 30, target, {type: 'basic', pwr: state.baseLv*25, color: '#60a5fa'}));
-                    state.baseCool = state.baseLv === 2 ? 1.2 : 0.6;
-                }
+                if (target) { bullets.push(new Bullet(basePos.x, basePos.y - 30, target, {type: 'basic', pwr: state.baseLv*25, color: '#60a5fa'})); state.baseCool = state.baseLv === 2 ? 1.2 : 0.6; }
             }
         }
 
         for (let i = enemies.length - 1; i >= 0; i--) { enemies[i].update(dt); if (enemies[i].hp <= 0) enemies.splice(i, 1); }
         towers.forEach(t => t.update(dt));
         for (let i = bullets.length - 1; i >= 0; i--) { bullets[i].update(dt); if (!bullets[i].active) bullets.splice(i, 1); }
-        for (let i = particles.length - 1; i >= 0; i--) {
-            let p = particles[i]; p.x += p.vx * dt; p.y += p.vy * dt; p.life -= dt * 1.5;
-            if (p.life <= 0) particles.splice(i, 1);
-        }
-        for (let i = texts.length - 1; i >= 0; i--) {
-            let txt = texts[i]; txt.y += txt.vy * dt; txt.life -= dt * 1.2;
-            if (txt.life <= 0) texts.splice(i, 1);
-        }
+        for (let i = particles.length - 1; i >= 0; i--) { let p = particles[i]; p.x += p.vx * dt; p.y += p.vy * dt; p.life -= dt * 1.5; if (p.life <= 0) particles.splice(i, 1); }
+        for (let i = texts.length - 1; i >= 0; i--) { let txt = texts[i]; txt.y += txt.vy * dt; txt.life -= dt * 1.2; if (txt.life <= 0) texts.splice(i, 1); }
 
         ui.gold.innerText = state.gold; ui.life.innerText = Math.floor(Math.max(0, state.life)); ui.baseLv.innerText = state.baseLv;
     }
 
     function drawCore() {
         ctx.save();
-        if (state.screenShake > 0) {
-            let mag = state.screenShake;
-            ctx.translate((Math.random()-0.5)*mag, (Math.random()-0.5)*mag);
-            state.screenShake *= 0.85; if(state.screenShake < 0.5) state.screenShake = 0;
-        }
-
+        if (state.screenShake > 0) { let mag = state.screenShake; ctx.translate((Math.random()-0.5)*mag, (Math.random()-0.5)*mag); state.screenShake *= 0.85; if(state.screenShake < 0.5) state.screenShake = 0; }
         ctx.clearRect(0, 0, width, height);
 
-        // 하이테크 배경 그리드
-        ctx.strokeStyle = 'rgba(255,255,255,0.03)'; ctx.lineWidth = 1;
-        let gridSize = 40;
-        let offX = bgOffset % gridSize, offY = bgOffset % gridSize;
-        ctx.beginPath();
-        for(let x = -offX; x < width; x += gridSize) { ctx.moveTo(x, 0); ctx.lineTo(x, height); }
-        for(let y = -offY; y < height; y += gridSize) { ctx.moveTo(0, y); ctx.lineTo(width, y); }
-        ctx.stroke();
+        ctx.strokeStyle = 'rgba(255,255,255,0.03)'; ctx.lineWidth = 1; let gridSize = 40; let offX = bgOffset % gridSize, offY = bgOffset % gridSize;
+        ctx.beginPath(); for(let x = -offX; x < width; x += gridSize) { ctx.moveTo(x, 0); ctx.lineTo(x, height); } for(let y = -offY; y < height; y += gridSize) { ctx.moveTo(0, y); ctx.lineTo(width, y); } ctx.stroke();
 
-        // 메인 경로 (네온 에너지 라인)
         ctx.lineJoin = 'round'; ctx.lineCap = 'round';
-        // 외곽 글로우
-        ctx.beginPath(); state.path.forEach((p, i) => i===0 ? ctx.moveTo(p.x, p.y) : ctx.lineTo(p.x, p.y));
-        ctx.strokeStyle = 'rgba(56, 189, 248, 0.15)'; ctx.lineWidth = 44; ctx.stroke();
-        // 내부 바닥
+        ctx.beginPath(); state.path.forEach((p, i) => i===0 ? ctx.moveTo(p.x, p.y) : ctx.lineTo(p.x, p.y)); ctx.strokeStyle = 'rgba(56, 189, 248, 0.15)'; ctx.lineWidth = 44; ctx.stroke();
         ctx.strokeStyle = '#0f172a'; ctx.lineWidth = 36; ctx.stroke();
-        // 중앙 에너지 흐름 (애니메이션)
-        ctx.strokeStyle = 'rgba(56, 189, 248, 0.8)'; ctx.lineWidth = 2; ctx.setLineDash([15, 20]);
-        ctx.lineDashOffset = -bgOffset * 2; ctx.stroke(); ctx.setLineDash([]);
+        ctx.strokeStyle = 'rgba(56, 189, 248, 0.8)'; ctx.lineWidth = 2; ctx.setLineDash([15, 20]); ctx.lineDashOffset = -bgOffset * 2; ctx.stroke(); ctx.setLineDash([]);
 
-        // 기지 렌더링
-        const basePos = state.path[state.path.length-1];
-        drawBase(basePos.x, basePos.y, state.baseLv);
+        const basePos = state.path[state.path.length-1]; drawBase(basePos.x, basePos.y, state.baseLv);
+        enemies.forEach(e => e.draw(ctx)); towers.forEach(t => t.draw(ctx)); bullets.forEach(b => b.draw(ctx));
 
-        // 엔티티 렌더링
-        enemies.forEach(e => e.draw(ctx));
-        towers.forEach(t => t.draw(ctx));
-        bullets.forEach(b => b.draw(ctx));
-
-        // 입자 (Additive Blending으로 화려하게)
         ctx.globalCompositeOperation = 'lighter';
-        particles.forEach(p => {
-            ctx.globalAlpha = Math.max(0, p.life); ctx.fillStyle = p.color;
-            ctx.beginPath(); ctx.arc(p.x, p.y, p.size, 0, Math.PI*2); ctx.fill();
-        });
+        particles.forEach(p => { ctx.globalAlpha = Math.max(0, p.life); ctx.fillStyle = p.color; ctx.beginPath(); ctx.arc(p.x, p.y, p.size, 0, Math.PI*2); ctx.fill(); });
         ctx.globalCompositeOperation = 'source-over'; ctx.globalAlpha = 1.0;
 
-        // 플로팅 텍스트
-        texts.forEach(t => {
-            ctx.globalAlpha = Math.max(0, Math.min(1, t.life * 1.5)); // 페이드아웃 보정
-            ctx.fillStyle = t.color; ctx.font = `900 ${t.size}px 'Pretendard', sans-serif`;
-            ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-            ctx.lineWidth = 4; ctx.strokeStyle = '#000';
-            ctx.strokeText(t.text, t.x, t.y); ctx.fillText(t.text, t.x, t.y);
-        });
+        texts.forEach(t => { ctx.globalAlpha = Math.max(0, Math.min(1, t.life * 1.5)); ctx.fillStyle = t.color; ctx.font = `900 ${t.size}px 'Pretendard', sans-serif`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.lineWidth = 4; ctx.strokeStyle = '#000'; ctx.strokeText(t.text, t.x, t.y); ctx.fillText(t.text, t.x, t.y); });
         ctx.globalAlpha = 1.0;
 
-        // 설치 사거리 프리뷰 (터치/마우스 위치)
         if (state.isTouching && state.gold >= towerTypes[state.selectedTower].cost) {
             let tData = towerTypes[state.selectedTower];
-            ctx.beginPath(); ctx.arc(state.mouseX, state.mouseY, tData.range, 0, Math.PI*2);
-            ctx.fillStyle = 'rgba(255, 255, 255, 0.1)'; ctx.fill();
-            ctx.strokeStyle = 'rgba(255, 255, 255, 0.5)'; ctx.lineWidth = 1; ctx.stroke();
-            
-            // 타워 반투명 실루엣
-            ctx.globalAlpha = 0.5;
-            let tempTower = new Tower(state.mouseX, state.mouseY, tData);
-            tempTower.draw(ctx);
-            ctx.globalAlpha = 1.0;
+            ctx.beginPath(); ctx.arc(state.mouseX, state.mouseY, tData.range, 0, Math.PI*2); ctx.fillStyle = 'rgba(255, 255, 255, 0.1)'; ctx.fill(); ctx.strokeStyle = 'rgba(255, 255, 255, 0.5)'; ctx.lineWidth = 1; ctx.stroke();
+            ctx.globalAlpha = 0.5; let tempTower = new Tower(state.mouseX, state.mouseY, tData); tempTower.draw(ctx); ctx.globalAlpha = 1.0;
         }
-
         ctx.restore();
     }
 
     function drawBase(x, y, lv) {
-        ctx.save(); ctx.translate(x, y);
-        ctx.shadowBlur = 20; ctx.shadowColor = "rgba(56, 189, 248, 0.6)";
-        
+        ctx.save(); ctx.translate(x, y); ctx.shadowBlur = 20; ctx.shadowColor = "rgba(56, 189, 248, 0.6)";
         ctx.fillStyle = 'rgba(255,255,255,0.8)'; ctx.font = "bold 13px sans-serif"; ctx.textAlign = "center";
-        let upStr = lv === 1 ? "UP(500G)" : (lv === 2 ? "UP(1000G)" : "MAX");
-        ctx.fillText(upStr, 0, 50);
-
-        if (lv === 1) {
-            ctx.fillStyle = "#1e293b"; ctx.fillRect(-30, -20, 60, 40);
-            ctx.fillStyle = "#38bdf8"; ctx.fillRect(-20, -10, 40, 15);
-            ctx.fillStyle = "#0f172a"; ctx.beginPath(); ctx.arc(0, 20, 10, Math.PI, 0); ctx.fill();
-        } else if (lv === 2) {
-            ctx.fillStyle = "#0f172a"; ctx.fillRect(-40, -25, 80, 50);
-            ctx.fillStyle = "#334155"; ctx.beginPath(); ctx.arc(0, -25, 30, Math.PI, 0); ctx.fill();
-            ctx.fillStyle = "#60a5fa"; ctx.beginPath(); ctx.arc(0, -25, 18, Math.PI, 0); ctx.fill();
-            ctx.fillStyle = "#fbbf24"; ctx.fillRect(-40, -5, 80, 4);
-        } else {
-            ctx.fillStyle = "#020617"; ctx.fillRect(-45, -30, 90, 60);
-            ctx.fillStyle = "#3b82f6"; ctx.beginPath(); ctx.moveTo(-25, -30); ctx.lineTo(0, -60); ctx.lineTo(25, -30); ctx.fill();
-            ctx.fillStyle = "#fbbf24"; ctx.fillRect(-45, -12, 90, 5); ctx.fillRect(-45, 8, 90, 5);
-            ctx.fillStyle = "#fff"; ctx.shadowBlur=10; ctx.shadowColor="#fff"; ctx.beginPath(); ctx.arc(0, -40, 8, 0, Math.PI*2); ctx.fill();
-        }
+        let upStr = lv === 1 ? "UP(500G)" : (lv === 2 ? "UP(1000G)" : "MAX"); ctx.fillText(upStr, 0, 50);
+        if (lv === 1) { ctx.fillStyle = "#1e293b"; ctx.fillRect(-30, -20, 60, 40); ctx.fillStyle = "#38bdf8"; ctx.fillRect(-20, -10, 40, 15); ctx.fillStyle = "#0f172a"; ctx.beginPath(); ctx.arc(0, 20, 10, Math.PI, 0); ctx.fill(); } 
+        else if (lv === 2) { ctx.fillStyle = "#0f172a"; ctx.fillRect(-40, -25, 80, 50); ctx.fillStyle = "#334155"; ctx.beginPath(); ctx.arc(0, -25, 30, Math.PI, 0); ctx.fill(); ctx.fillStyle = "#60a5fa"; ctx.beginPath(); ctx.arc(0, -25, 18, Math.PI, 0); ctx.fill(); ctx.fillStyle = "#fbbf24"; ctx.fillRect(-40, -5, 80, 4); } 
+        else { ctx.fillStyle = "#020617"; ctx.fillRect(-45, -30, 90, 60); ctx.fillStyle = "#3b82f6"; ctx.beginPath(); ctx.moveTo(-25, -30); ctx.lineTo(0, -60); ctx.lineTo(25, -30); ctx.fill(); ctx.fillStyle = "#fbbf24"; ctx.fillRect(-45, -12, 90, 5); ctx.fillRect(-45, 8, 90, 5); ctx.fillStyle = "#fff"; ctx.shadowBlur=10; ctx.shadowColor="#fff"; ctx.beginPath(); ctx.arc(0, -40, 8, 0, Math.PI*2); ctx.fill(); }
         ctx.restore();
     }
-
-    // 처음 로딩 시 화면만 세팅하고 대기 (자동 시작 안함)
-    setTimeout(() => { resizeCanvas(); }, 100);
 </script>
 </body>
 </html>

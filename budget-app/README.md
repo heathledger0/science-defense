@@ -19,10 +19,22 @@ npm run preview  # 빌드 결과 미리보기
 - **연간 리포트**: 카테고리별 연간 지출 비중(막대·파이 차트), 월별 요약 테이블, 연간 합계·월평균
 - **신용카드 트래커**: 카테고리 합계와는 별개로 관리되는 신용카드 누적 사용 기록
 
-## 데이터 저장
+## 데이터 저장 & 로그인
 
-브라우저 `localStorage`에 저장됩니다 (zustand persist, 키: `budget-app:v1`). 별도 서버나 로그인 없이 이 브라우저에서만 데이터가 유지됩니다.
+이메일/비밀번호로 로그인하면 [Supabase](https://supabase.com)(Postgres)에 데이터가 저장되어 PC·폰 등 어느 기기에서 로그인하든 같은 데이터를 봅니다. 각 사용자는 Row Level Security로 자신의 데이터만 읽고 쓸 수 있습니다.
+
+### Supabase 설정 (최초 1회)
+
+1. [supabase.com](https://supabase.com)에서 무료 프로젝트를 생성합니다.
+2. 프로젝트의 **SQL Editor**에서 [`supabase/schema.sql`](./supabase/schema.sql) 전체 내용을 실행합니다 (entries/budgets/card_entries 테이블 + RLS 정책 생성).
+3. **Settings → API**에서 `Project URL`과 `anon public` 키를 복사합니다.
+4. 로컬 개발용: `budget-app/.env` 파일을 만들고 [`.env.example`](./.env.example)을 참고해 값을 채웁니다.
+5. 배포용(GitHub Pages): 저장소 **Settings → Secrets and variables → Actions**에서 `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY` 두 개의 Repository secret을 추가합니다. `deploy-budget-app.yml` 워크플로우가 빌드 시 이 값을 주입합니다.
+
+기본적으로 Supabase는 회원가입 시 이메일 인증을 요구합니다. 개인적으로만 쓰면서 인증 메일이 번거롭다면 Supabase 프로젝트의 **Authentication → Providers → Email**에서 "Confirm email"을 꺼도 됩니다.
+
+Supabase 환경 변수가 설정되지 않은 상태로 실행하면 로그인 화면 대신 설정 안내 메시지가 표시됩니다.
 
 ## 기술 스택
 
-React + TypeScript + Vite, Tailwind CSS, Recharts, Zustand, React Router.
+React + TypeScript + Vite, Tailwind CSS, Recharts, Zustand, React Router, Supabase (Postgres + Auth).

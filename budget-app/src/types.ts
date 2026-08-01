@@ -15,6 +15,7 @@ export interface Entry {
   label: string;
   amount: number;
   memo?: string;
+  seriesId?: string; // links recurring 고정지출 entries created together across months
 }
 
 export interface Budget {

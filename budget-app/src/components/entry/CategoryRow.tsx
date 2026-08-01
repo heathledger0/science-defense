@@ -18,8 +18,10 @@ export default function CategoryRow({
 }) {
   const entries = useBudgetStore((s) => s.entries);
   const addEntry = useBudgetStore((s) => s.addEntry);
+  const addFixedSeriesEntry = useBudgetStore((s) => s.addFixedSeriesEntry);
   const [newLabel, setNewLabel] = useState('');
   const [newAmount, setNewAmount] = useState('');
+  const isFixed = category.section === 'fixed';
 
   const categoryEntries = entries
     .filter(
@@ -31,14 +33,19 @@ export default function CategoryRow({
   function handleAdd() {
     const parsed = Number(newAmount.replace(/,/g, ''));
     if (!newAmount || !Number.isFinite(parsed) || parsed === 0) return;
-    addEntry({
+    const payload = {
       categoryId: category.id,
       year,
       month,
       day,
       label: newLabel.trim() || category.name,
       amount: parsed,
-    });
+    };
+    if (isFixed) {
+      addFixedSeriesEntry(payload);
+    } else {
+      addEntry(payload);
+    }
     setNewLabel('');
     setNewAmount('');
   }
@@ -82,6 +89,11 @@ export default function CategoryRow({
           추가
         </button>
       </div>
+      {isFixed && (
+        <p className="mt-1 pl-2 text-xs text-gray-400">
+          이 달부터 12월까지 자동으로 반영됩니다. 이후 항목별로 이번 달만 수정하거나 다음 달부터 쭉 이어서 수정할 수 있어요.
+        </p>
+      )}
     </div>
   );
 }

@@ -16,6 +16,7 @@ export default function EntryLine({ entry }: { entry: Entry }) {
       categoryId: entry.categoryId,
       year: entry.year,
       month: entry.month,
+      day: entry.day,
       label: label.trim() || '항목',
       amount: Number.isFinite(parsed) ? parsed : 0,
       memo: memo.trim() || undefined,

@@ -8,11 +8,15 @@ create table if not exists entries (
   category_id text not null,
   year int not null,
   month int not null check (month between 1 and 12),
+  day int not null default 1 check (day between 1 and 31),
   label text not null,
   amount numeric not null,
   memo text,
   created_at timestamptz not null default now()
 );
+
+-- Migration for projects created before the day field existed: adds the column if missing.
+alter table entries add column if not exists day int not null default 1 check (day between 1 and 31);
 
 create table if not exists budgets (
   id uuid primary key default gen_random_uuid(),

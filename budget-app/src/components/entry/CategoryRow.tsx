@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import type { CategoryDef } from '../../types';
 import { useBudgetStore } from '../../store/useBudgetStore';
-import { categoryTotal } from '../../lib/calculations';
+import { categoryDayTotal } from '../../lib/calculations';
 import Money from '../common/Money';
 import EntryLine from './EntryLine';
 
@@ -9,10 +9,12 @@ export default function CategoryRow({
   category,
   year,
   month,
+  day,
 }: {
   category: CategoryDef;
   year: number;
   month: number;
+  day: number;
 }) {
   const entries = useBudgetStore((s) => s.entries);
   const addEntry = useBudgetStore((s) => s.addEntry);
@@ -20,9 +22,11 @@ export default function CategoryRow({
   const [newAmount, setNewAmount] = useState('');
 
   const categoryEntries = entries
-    .filter((e) => e.categoryId === category.id && e.year === year && e.month === month)
+    .filter(
+      (e) => e.categoryId === category.id && e.year === year && e.month === month && e.day === day,
+    )
     .sort((a, b) => a.label.localeCompare(b.label));
-  const total = categoryTotal(entries, category.id, year, month);
+  const total = categoryDayTotal(entries, category.id, year, month, day);
 
   function handleAdd() {
     const parsed = Number(newAmount.replace(/,/g, ''));
@@ -31,6 +35,7 @@ export default function CategoryRow({
       categoryId: category.id,
       year,
       month,
+      day,
       label: newLabel.trim() || category.name,
       amount: parsed,
     });

@@ -9,6 +9,7 @@ interface EntryRow {
   category_id: string;
   year: number;
   month: number;
+  day: number;
   label: string;
   amount: number;
   memo: string | null;
@@ -34,6 +35,7 @@ const fromEntryRow = (row: EntryRow): Entry => ({
   categoryId: row.category_id,
   year: row.year,
   month: row.month,
+  day: row.day,
   label: row.label,
   amount: Number(row.amount),
   memo: row.memo ?? undefined,
@@ -111,6 +113,7 @@ export const useBudgetStore = create<BudgetState>((set) => ({
         category_id: entry.categoryId,
         year: entry.year,
         month: entry.month,
+        day: entry.day,
         label: entry.label,
         amount: entry.amount,
         memo: entry.memo ?? null,
@@ -129,6 +132,7 @@ export const useBudgetStore = create<BudgetState>((set) => ({
         category_id: patch.categoryId,
         year: patch.year,
         month: patch.month,
+        day: patch.day,
         label: patch.label,
         amount: patch.amount,
         memo: patch.memo ?? null,

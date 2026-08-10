@@ -1,11 +1,12 @@
-name: Deploy budget-app to GitHub Pages
+name: Deploy site to GitHub Pages
 
 on:
   push:
     branches: [main]
     paths:
+      - 'index.html'
       - 'budget-app/**'
-      - '.github/workflows/deploy-budget-app.yml'
+      - '.github/workflows/deploy-pages.yml'
   workflow_dispatch:
 
 permissions:
@@ -34,10 +35,16 @@ jobs:
         env:
           VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
           VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
+      - name: Assemble site
+        run: |
+          mkdir -p _site
+          cp index.html _site/index.html
+          mkdir -p _site/budget
+          cp -r budget-app/dist/. _site/budget/
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: budget-app/dist
+          path: _site
 
   deploy:
     needs: build
